@@ -26,3 +26,51 @@ c++ is not java but they have similarities
          the coherent kernel of c++ is c
          type safety
 
+- always favor the standard libraries
+- good programmers fulfill community standards, community expectations
+
+- pre-processor commands #define vs const
+
+- c:
+    - in the beginning it only supported multi line comments
+    - /* */
+    - now supports rest line comments as well //
+        - this was more c++ style
+    - #include
+    - <stdio.h>, <stdlib.h>, <time.h>
+    - #define macros
+    - main()
+- c++:
+    - // comments
+    - #include
+    - <iostream>
+    - since c is a subset of c++ we can also use c libraries
+    - <cstdlib>, <ctime>
+    - using of namespaces
+        - std is the standard namespace
+            - using namespace std;
+        - this is equivalent to java packages
+        - and to C# namespaces
+    - use of const instead of define
+    - inline as a new keyword
+        - compiler directive
+        - inline int sum(int a, int b) {return a+b;}
+
+- c++ improvements:
+    - most of these are already present in c as well
+
+- structure of a program:
+    - int main(void)
+    - cout << "the text we want to print";
+    - cin >> variable;
+    - and we can use cout and cin directly if in the beginning we said
+    that we wanted to use the standard namespace:
+        using namespace std;
+        - if not, we must use std::cout and std::cin
+        - :: is the scope resolution operator
+    - << in c this is bit shift
+        - in c++ it's only a bit shift when the arguments 
+        have that meaning
+        - when preceded by an ostream the operator << is overloaded
+        
+
