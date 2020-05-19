@@ -1,0 +1,28 @@
+Topics
+
+    How to convert an existing C program to C++
+    Use of type safe input/output
+    Avoiding the preprocessor
+
+Suggested Readings
+
+    C++ by Dissection, ch. 1-3, 9
+    C++ for C Programmers, ch. 2-3
+
+- C++ as a better C
+    - oop
+    - generic programming
+    - both are system implementation languages (SIL)
+        - low level
+    - for both you have to have a great knowledge of how to deal with memory
+- Graph theory
+    - shortest path algorithm
+    - minimum spanning tree algorithm
+
+c++ is not java but they have similarities
+    - the OO methodology for instance
+         data and operations belong together
+         type extensibility
+         the coherent kernel of c++ is c
+         type safety
+
