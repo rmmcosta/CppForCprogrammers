@@ -73,4 +73,28 @@ c++ is not java but they have similarities
         have that meaning
         - when preceded by an ostream the operator << is overloaded
         
+- memory allocation in the stack vs memory allocation in the heap
+    - simple variables are allocated in the stack
+    - stack is for what you already know (development time)
+    - heap is for what you don't know yet (only in runtime)
+    - objects are allocated in the heap
+        - keyword new
+    - heap -> dynamic memory allocation
+    - c vs c++
+        malloc vs new
+        calloc
+        realloc
+        free vs delete
 
+- C++ supports four types of casting:
+    1. Static Cast
+        - is a safe cast
+        - int x = 3;
+        - int y = 2;
+        - static_cast<double>(x/y);
+    2. Dynamic Cast
+    3. Const Cast
+    4. Reinterpret Cast
+
+- localization drives down complexity
+- endl -> io manipulator

@@ -26,7 +26,7 @@ int main(void)
     double probability = 0.0;
     for (int i = 0; i < MAX_VALUE; i++)
     {
-        probability = (double)outcomes[i] / throws * 100;
+        probability = static_cast<double>(outcomes[i] / throws * 100);
         total+=probability;
         if (outcomes[i] > 0)
         {
