@@ -10,7 +10,7 @@ using namespace std;
 #include <vector>
 const int N = 20;
 
-void sumConsec(int *accum, int init, vector<int> nums)
+inline void sumConsec(int *accum, int init, vector<int> nums)
 {
     *accum = init;
     for (int i = 0; i < N; i++)

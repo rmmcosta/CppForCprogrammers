@@ -98,3 +98,22 @@ c++ is not java but they have similarities
 
 - localization drives down complexity
 - endl -> io manipulator
+
+c++ is more type safe
+
+oo vs imperative
+
+int* xpto -> is a pointer to an int
+*xpto = 10 -> dereference xpto (o apontado por xpto) gets 10
+
+in c there is not function overloading in c++ there is
+    - discriminated by signature (the parameters that you pass)
+    - use the signature matching algorithm
+
+in c, called by reference is simulated by using pointers
+
+in c++ we can pass values by reference without using pointers
+    - we can use the address
+    swap(int& i, int& j)
+
+c++ also has something called generics and templates
