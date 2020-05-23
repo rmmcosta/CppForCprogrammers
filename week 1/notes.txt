@@ -117,3 +117,14 @@ in c++ we can pass values by reference without using pointers
     swap(int& i, int& j)
 
 c++ also has something called generics and templates
+
+generics in c++ means programming using templates
+    - Standard Template Library
+    template <class T>
+    inline void swap(T& first, T& second) {
+        T temp = first;
+        first = second;
+        second = temp;
+    }
+
+    - T is a meta variable, it will be substituted by the actual type

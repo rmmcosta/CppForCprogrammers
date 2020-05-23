@@ -5,9 +5,10 @@
 //  uses vector<> instead of array
 //  inlines short functions
 
-using namespace std;
 #include <iostream>
 #include <vector>
+using namespace std; //by using the std namespace we don't need to use the std:: scope
+
 const int N = 20;
 
 inline void sumConsec(int *accum, int init, vector<int> nums)
