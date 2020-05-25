@@ -1,0 +1,49 @@
+agenda:
+ - c++ functions and generics
+ - graph algorithms
+    - minimum spanning tree algorithm
+    - dijkstra shortest path algorithm
+ - default parameters and variable argument lists
+ - const parameters
+    - this way we ensure that nothing is changed inside the function
+    regarding those parameters
+ - multiple types in generics
+ - operator overloading
+
+ graph algorithms are foundational for computer science
+    - here we will see how to represent a graph as a data type, a data structure
+    - there are directed edges and undirected edges
+    - directed graphs, undirected graphs, weighted graphs
+    - complete graph level 4 -> k4
+        - the degree of this graph is 4-1 = 3
+    - the bridges problem
+        - Euler theory
+    - there are 2 possible data structures to represent graphs:
+        - connectivity matrix (also distances)
+            - dense graphs
+        - edge list representation
+            - sparse graphs (the majority of problems)
+        - there are advantages and disadvantages:
+            - the choice depends on:
+                - how much data do you want to store
+                - how efficient do you need the algorithm to be
+
+- Dijkstra shortest path:
+    - undirected graphs with weightings (with cost)
+    - find the shortest path between start and destination:
+        - s and d
+    - the critical steps are to maintain:
+        - 2 sets:
+            - close nodes
+                - nodes that have known shortest distances 
+                    - for example the node itself (a - a)
+            - open nodes
+                - what is reachable
+        - the iterative steps are two always peak the open node with
+        the least cost
+    - 3 possibilities:
+        - open set  
+        - close set (and it's done)
+        - opportunity to update the path
+    - you must have a way to tell what are the nodes of the path
+
