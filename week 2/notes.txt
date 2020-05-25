@@ -47,3 +47,10 @@ agenda:
         - opportunity to update the path
     - you must have a way to tell what are the nodes of the path
 
+creating types:
+    - oop
+        - extend the native types
+    - type matters
+        - also for operators
+    
+
