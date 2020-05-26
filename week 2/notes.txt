@@ -52,5 +52,43 @@ creating types:
         - extend the native types
     - type matters
         - also for operators
+
+natural way of building widgets:
+    - in C we can use struct
+        - but can add to them only data members
+        - to access the members of a struct when the struct
+        is passed by reference (to a pointer),
+        you have to use the -> 
+        void sumToPoint(Point *p1, Point p2) {
+            p1->x += p2.x;
+            p1->y += p2.y;
+        }
+    - in C++ the structs can also have methods
+        - but the scope of those methods is the 
+        struct itself
+    - C++ also has classes
+        - classes have 3 types of access:
+            public, private and protected
+        class Xpto {
+            private:
+                int x;
+            public:
+                int getX() {
+                    return x;
+                }
+        }
+    - 90% rules in programming:
+        - if you learn a few ideas
+        - they are applicable to 90% of the use cases
+        - the other 10% you can learn them as you go
+        - so, learn the basics
+    - it's a common use case to override the << operator
+    so the object will work with cout;
+
+    - pass by reference (Xpto &xpto) it's always better in terms 
+    of performance
+    - and if the object is not supposed to be mutated it's a good
+    practice to add the const keyword
+    (const Xpto &xpto)
     
 
