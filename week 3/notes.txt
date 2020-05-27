@@ -1,0 +1,38 @@
+classes and oop:
+    - constructors and destructors
+    - declare, allocate, assign
+    - constructors:
+        - default constructors
+        - copy constructors
+        - argument constructors
+        - conversion constructors
+        - initialize list syntax
+            - point():x(0.0),y(1.1){}
+            - point(double x, double y):x(x),y(y){}
+            - point(double x=0.0, double y=0.0):x(x),y(y){}
+        - assignment is different than initialization
+            - initialize a const is possible
+            - assign a value to a const is not
+    - new -> allocator -> in C malloc()
+    - delete -> deAllocator -> in C free()
+        - here we are working with the heap
+        - heap is dynamically allocated memory
+            - stack is static allocated memory
+            - stack is faster than heap
+            - You can use the stack if you know exactly how much data you need to 
+            allocate before compile time and it is not too big. 
+            - You can use heap if you don't know exactly how much data you will need 
+            at runtime or if you need to allocate a lot of data.
+            - int b[10]; -> stack
+            - int *b = new int[10]; -> heap
+        - and unlike java is not automatically garbage collected
+    - good programmers always free memory if that memory is not needed
+    anymore
+    - destructors:
+        ~Point() {...}
+Exercise:
+    - implement a single linked list:
+        constructor
+        destructor
+        head
+        prepend method
