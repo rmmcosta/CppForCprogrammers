@@ -36,3 +36,7 @@ Exercise:
         destructor
         head
         prepend method
+    - 0 is the null pointer
+
+Exercise:
+    - have a program to draw a graph

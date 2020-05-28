@@ -88,6 +88,6 @@ int main()
       p -> print();
       cout << "exiting inner block" << endl;
    }
-   //p -> print();  gives system dependent behavior
+   p -> print();  //gives system dependent behavior
    cout << "exiting outer block" << endl;
 }
