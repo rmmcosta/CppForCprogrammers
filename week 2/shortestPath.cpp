@@ -112,6 +112,7 @@ void runDijkstra(vector<char> &nodes, vector<char> &nodesVisited, map<char, int>
                 distances.find(adjacent.node)->second = newDistance;
             }
         }
+        adjacentNodes.clear();
         nodes.erase(remove(nodes.begin(), nodes.end(), finalNode), nodes.end());
     }
 }
@@ -136,5 +137,9 @@ int main()
     defineAdjacents(adjacents);
     runDijkstra(nodes, nodesVisited, distances, adjacents);
     printShortestPaths(distances);
+    nodes.clear();
+    nodesVisited.clear();
+    distances.clear();
+    adjacents.clear();
     return 0;
 }

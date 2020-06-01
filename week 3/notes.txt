@@ -40,3 +40,64 @@ Exercise:
 
 Exercise:
     - have a program to draw a graph
+
+- we can create a multidimensional array with double pointer:
+    bool **graph;
+    graph = new bool *[size];
+    for (int i = 0; i < size; i++)
+    {
+        graph[i] = new bool[size];
+    }
+
+- complex aggregates:
+    - for example lists and list elements
+        - the elements are stored in the heap memory
+        - the class element will have 
+            - the value that we want to store (an int or char, or any other type)
+            - the pointer to the next list element
+        - the last element will have a null pointer as next
+            - in c++11 use nullptr;
+            - in other versions use 0;
+        - in a list most of the times you want to have 
+        an head list element pointer and a cursor list element pointer
+            - the head is the start list element
+            - the cursor is the current list element where you are in the list 
+        - list class methods:
+            - append
+                - the head stay fixed in the beginning and the 
+                cursor is the one that advances
+                - the new element is always the last element
+                - don't forget to check if the head is empty
+                    - the first element to be appended
+                void append(data) {
+                    ListElement *element = new ListElement;
+                    element->data = data;
+                    element->next = nullptr;
+                    cursor->next = element;
+                    cursor = element;
+                }
+            - prepend
+                - in the case of the prepend
+                the head moves and the cursor stays fixed
+                - the new element points to the old head
+                - and the head points to the new element
+            - advance
+                cursor = cursor->next
+            - getelement
+                return cursor->data
+            - print
+    - remember to use the standard template library
+        - lists have various types of constructors there:
+            - default ():head(0),cursor(0){}
+            - transfer constructor (const int *arr, int size)
+            - copy constructor (const list& lst)
+            - move constructor (const list& lst)
+        - deep copy vs referential (or shallow) copy:
+            - questions about utilization, cost and modification
+            - deep copy:
+                - use the copy constructor
+    - good citizenship
+        - means that everything we create of the heap
+        we must deAllocate
+        - we can use valgrind to test our memory leaks
+            valgrind ./myListMain --leak-check=full

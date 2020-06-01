@@ -1,43 +1,23 @@
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include "randGraph.hpp"
 using namespace std;
+using namespace myRandGraph;
 
-float prob()
+float myRandGraph::prob(int i)
 {
-    srand(time(0));
-    float prob = (float)rand()/RAND_MAX;
-    //cout << "prob: " << prob;
+    srand(time(0) + i);
+    float prob = (float)rand() / RAND_MAX;
     return prob;
 }
 
-void generateGraph(int size, double density)
+void myRandGraph::generateGraph(const int size, const double density, bool *graph)
 {
-    bool **graph;
-    graph = new bool *[size];
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < size * size; i++)
     {
-        graph[i] = new bool[size];
+        if (i % 2 != 0) //it's not the same node
+            *(graph + i) = prob(i) < density;
+        else
+            *(graph + i) = 0;
     }
-    for (int i = 0; i < size; i++)
-    {
-        //cout << graph[i] << endl;
-        for (int j = 0; j < size; j++)
-        {
-            if (i != j)
-            {
-                graph[i][j] = prob() < density;
-            }
-            cout << graph[i][j] << "\t";
-        }
-        cout << endl
-             << endl;
-    }
-}
-
-int main()
-{
-    int size = 5;
-    double prob = 0.19;
-    generateGraph(size, prob);
 }
