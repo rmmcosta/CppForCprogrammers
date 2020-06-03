@@ -1,0 +1,13 @@
+In this lesson I learned a lot.
+From complex aggregates to classes a lot was covered.
+So, for instance I lear about constructor and destructors, and their relation with the heap memory.
+We always have at our disposal heap and stack memory.
+Stack is used when we use native data types and the heap is used for instance for dynamic memory allocation.
+This is precisely the case when we use the keyword new. This keyword allows us to instantiate objects of a given type.
+Those instances will be placed in the heap. And to avoid memory leaks we must make sure that we destroy/delete what is not being used, what is
+unnecessary anymore.
+So, heap is dynamically allocated memory and stack is static allocated memory. 
+Stack is faster than heap. We can use the stack if we know exactly how much data we need to 
+allocate before compile time and it is not too big. We can use heap if we don't know exactly 
+how much data we will need at runtime or if we need to allocate a lot of data.
+Good programmers always free memory if that memory is not needed anymore.

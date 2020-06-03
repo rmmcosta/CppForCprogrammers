@@ -120,7 +120,7 @@ void runDijkstra(vector<char> &nodes, vector<char> &nodesVisited, map<char, int>
 int main()
 {
     //we need 2 vectors
-    //one for the nodes in the graph
+    //one for the nodes in the graph Q
     //another for the nodes already visited
     //we also need a map with distances from
     //the source node s to each node in the graph
