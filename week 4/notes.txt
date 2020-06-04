@@ -1,0 +1,34 @@
+- Minimum spanning tree:
+    - assume a graph is connected with arbitrary cost Cij
+    - Find a spanning tree of least cost
+    - A spanning tree is a set of edges within the graph
+    that connects all the nodes and where there is no cycle
+    - a tree with n nodes -> the spanning tree has n-1 edges
+- for the assignment think of edges with colors:
+    - red, blue and green
+    - find MST with edges of a specific color or pair of colors
+
+- with c11++ we now have enum class types
+    - they have some advantages when compared with regular enum types
+    - they are considered to be strongly typed enumerators
+    - the regular enum types have problems for instance in the following situation:
+        - enum Color {RED, BLUE, GREEN};
+        - enum Traffic {RED, BLUE, GREEN};
+    - enum class types don't have these problems:
+        - enum class Color {RED, BLUE, GREEN};
+        - enum class Traffic {RED, BLUE, GREEN};
+            Color::RED;
+- Jarnik-Prim MST:
+    - starts with a single vertex and repeatedly joins the Minimum
+    weight edge that joins the tree to a non-tree vertex
+    - at each step, the tree is a mst
+    - start at node 0, look for the nearest node
+    - peek the nearest node until
+        - all nodes in the graph
+        - or no more nodes
+    - attention that this is not a path, it's a tree
+    - so we can go back to a previous node to jump to a new one
+    - so we have a vector of vertexes that starts with 0
+    and we always iterate over this vector to see from the vertexes that
+    are there what is the nearest node (don't count with the 
+    ones that are already here in the vertex vector)
