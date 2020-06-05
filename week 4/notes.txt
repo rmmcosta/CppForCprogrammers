@@ -32,3 +32,7 @@
     and we always iterate over this vector to see from the vertexes that
     are there what is the nearest node (don't count with the 
     ones that are already here in the vertex vector)
+
+- side note:
+    - iterator for vectors
+    for(vector<int>::iterator it = myvector.begin();it!=myvector.end();it++)
