@@ -27,6 +27,7 @@ public:
     void generateGraph();
     void printGraph();
     vector<Edge *> getEdges(int node);
+	void insertEdge(int, int, int);
     ~Graph();
 
 private:

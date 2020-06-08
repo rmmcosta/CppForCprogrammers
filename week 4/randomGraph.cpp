@@ -68,6 +68,19 @@ void Graph::printGraph()
     }
 }
 
+void Graph::insertEdge(int nodeOrigin, int nodeDestin, int distance)
+{
+	//first let's see if the nodeOrigin is already in the edges map
+	if(edges.find(nodeOrigin)!=edges.end())
+	{
+		edges.find(nodeOrigin)->second.push_back(new Edge(nodeDestin, distance));
+	}
+	else
+	{
+		edges.insert(pair<int, vector<Edge*>>(nodeOrigin, {new Edge(nodeDestin, distance)}));
+	}
+}
+
 Graph::~Graph()
 {
     //clear each adjacent
