@@ -13,6 +13,7 @@ public:
         this->size = size;
     }
     int runPrim();
+	void printGraph();
     ~MST();
 
 private:
@@ -20,14 +21,16 @@ private:
     Graph *graph;
     vector<int> vertexes;
     vector<int> distances;
+	void printVertexes();
+	void printDistances();
 };
 
 int MST::runPrim()
 {
     graph->generateGraph();
+	vertexes.push_back(0);        
     while (vertexes.size() < size)
     {
-        vertexes.push_back(0);
         int finalDistance = kInfinity;
         int finalNum = -1;
         for (vector<int>::iterator itVertexes = vertexes.begin(); itVertexes != vertexes.end(); itVertexes++)
@@ -64,6 +67,33 @@ int MST::runPrim()
     return sum;
 }
 
+void MST::printGraph() 
+{
+	graph->printGraph();
+	printVertexes();
+	printDistances();
+}
+
+void MST::printVertexes()
+{
+	cout << endl << "Vertexes: " << vertexes[0];	
+	for(int i=1; i<vertexes.size();i++)
+	{
+		cout << ", " << vertexes[i];
+	}
+	cout << endl;
+}
+
+void MST::printDistances()
+{
+	cout << endl << "Distances: " << distances[0];	
+	for(int i=1; i<distances.size();i++)
+	{
+		cout << ", " << distances[i];
+	}
+	cout << endl;
+}
+
 MST::~MST()
 {
     delete graph;
@@ -75,6 +105,7 @@ int main()
 {
     MST *mst = new MST(10, 0.8);
     int result = mst->runPrim();
+	mst->printGraph();
     cout << "result:" << result << endl;
     delete mst;
     return 0;
