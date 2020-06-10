@@ -57,3 +57,29 @@
 		- friend function overloads operator by all the args being passed in the args list
 		- member function overloads operators by the first argument being the class argument
 
+- standard template library - STL
+	- vectors
+	- the threading library
+	- stl is like a three legged stool (chair)
+		- stl sits on containers, algorithms and iterators
+		- containers:
+			- vectors, lists, maps, etc.
+		- iterators:
+			- forward, backward, random access
+			- we also have stream iterators
+		- algorithms:
+			- sort, permute, etc.  
+			- bubble sort, quick sort, etc.
+	- iterator for vectors:
+		for(vector<int>::iterator it = v.begin(); it!=v.end(); it++)
+		{
+			cout << "the value: " << *it << endl;
+		}
+	- v.begin() point to a value, but v.end() doesn't hold a value. v.end() is just a sentinel
+
+- c++ 11:
+	- auto -> infer type
+		- types can be deduced from context
+		- so for instance vector<int>::iterator it can be replaced by:
+			for(auto it=v.begin(); it!=v.end(); it++)
+
