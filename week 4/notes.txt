@@ -82,4 +82,11 @@
 		- types can be deduced from context
 		- so for instance vector<int>::iterator it can be replaced by:
 			for(auto it=v.begin(); it!=v.end(); it++)
+	- range for statement
+		- for(double d:data)
+		- for(declaration:expression)
+		- for(auto &element:data) 
+		  {
+			  element+=2;
+		  }
 
