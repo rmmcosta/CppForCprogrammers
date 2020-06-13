@@ -5,10 +5,10 @@
 #include "randomGraph.hpp"
 using namespace std;
 
-float prob(int i, int j)
+double prob(int i, int j)
 {
     srand(time(0) + i + j);
-    float prob = static_cast<float>(rand()) / RAND_MAX;
+    double prob = static_cast<double>(rand()) / RAND_MAX;
     //cout << "prob:" << prob << "rand max:" << RAND_MAX << endl;
     return prob;
 }

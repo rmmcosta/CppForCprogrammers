@@ -90,3 +90,19 @@
 			  element+=2;
 		  }
 
+- iterators categories (weakest to strongest):
+	- input -> read (single pass)
+	- output -> write (single pass)
+	- forward -> read and write (multipass) 1 direction
+	- bidirectional -> multipass with 2 directions
+	- random access -> o(1) -> indexable container -> arrays and vectors
+
+- in stl the design principle is to use the weakest iterator that
+accomodates the most efficient algorithm
+- quicksort requires random access. 
+As a consequence it can't be used in a non-random access container
+such as list
+
+- to do sums we can use the accumulate of the numeric library
+	accumulate(start, end, initialValue)
+
