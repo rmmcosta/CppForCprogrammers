@@ -1,0 +1,12 @@
+c++ 11 features:
+    - lambda expressions
+        - unnamed functions
+    - tuple library
+    - threading package
+    - regexp package
+    - unorder maps
+    - move semantics
+        - allows high efficiently algorithms
+- game of hex
+    - monte carlo methods
+    - artificial intelligence in game play
