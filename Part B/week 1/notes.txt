@@ -10,3 +10,34 @@ c++ 11 features:
 - game of hex
     - monte carlo methods
     - artificial intelligence in game play
+
+- enum class:
+    - type safety
+    - legacy enums don't provide that
+    - we can use other types instead of the underlying default int:
+        - enum class Identifier: Integral_Type{enumerator_list};
+
+- stl:
+    - three legged stool:
+        - containers:
+            - sequence:
+                - vectors, deques, lists
+            - associative:
+                - maps, sets
+        - iterators
+            - pointers or cursors
+            - input, random...
+        - algorithms
+            - numeric
+            - sort
+            - ...
+        - libraries:
+            - <regex>
+            - <thread>
+            - <unordered_map>
+            - <array>
+            - <forward_list>
+- the algorithm find is a single pass algorithm
+    - is an example of an input/output iterator
+- forward iterator:
+    - 
