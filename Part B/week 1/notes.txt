@@ -39,5 +39,11 @@ c++ 11 features:
             - <forward_list>
 - the algorithm find is a single pass algorithm
     - is an example of an input/output iterator
-- forward iterator:
-    - 
+- forward iterator
+
+- Example:
+    - poker probability
+        - compute the probability in 5 card stud
+        of making a straight flush
+        - create abstract types for the card
+        - use vector and shuffle from stl
