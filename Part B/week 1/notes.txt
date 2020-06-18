@@ -47,3 +47,4 @@ c++ 11 features:
         of making a straight flush
         - create abstract types for the card
         - use vector and shuffle from stl
+- always use the most efficient algorithm and the weakest iterator

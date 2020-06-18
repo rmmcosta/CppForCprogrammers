@@ -9,7 +9,6 @@ using namespace std;
 const int kSuits = 4;
 const int kRanks = 13;
 const int kDeal = 5;
-const int kTrials = 2;
 
 enum class Suit
 {
@@ -328,6 +327,7 @@ bool isStraightFlush(vector<Card *> hand)
 {
     //A straight flush is a hand that contains five cards
     //of sequential rank, all of the same suit
+    sort(hand.begin(),hand.end());
     Suit s = hand[0]->getSuit();
     Rank r = hand[0]->getRank();
     Suit s1 = hand[1]->getSuit();
@@ -361,7 +361,10 @@ double probStraightFlush(Deck &deck)
 {
     double prob = 0.0;
     vector<double> probs;
-    for (int i = 0; i < kTrials; i++)
+    int trials;
+    cout << "Please define the number of trials:";
+    cin >> trials;
+    for (int i = 0; i < trials; i++)
     {
         bool isStraight = false;
         int draws = 0;
@@ -370,7 +373,45 @@ double probStraightFlush(Deck &deck)
             ++draws;
             isStraight = isStraightFlush(deck.deal());
         }
-        cout << "draws: " << draws << endl; 
+        cout << "straight flush draws: " << draws << endl; 
+        cout << static_cast<double>(1.0 / draws) << endl;
+        probs.push_back(static_cast<double>(1.0 / draws));
+    }
+    prob = static_cast<double>(accumulate(probs.begin(), probs.end(), 0.0) / probs.size());
+    return prob;
+}
+
+bool isFlush(vector<Card *> hand)
+{
+    //A straight flush is a hand that contains five cards
+    //of sequential rank, all of the same suit
+    Suit s = hand[0]->getSuit();
+
+    for (int i = 1; i < hand.size(); i++)
+    {
+        if (hand[i]->getSuit() != s)
+            return false;
+    }
+    return true;
+}
+
+double probFlush(Deck &deck)
+{
+    double prob = 0.0;
+    vector<double> probs;
+    int trials;
+    cout << "Please define the number of trials:";
+    cin >> trials;
+    for (int i = 0; i < trials; i++)
+    {
+        bool isVarFlush= false;
+        int draws = 0;
+        while (!isVarFlush)
+        {
+            ++draws;
+            isVarFlush = isFlush(deck.deal());
+        }
+        cout << "flush draws: " << draws << endl; 
         cout << static_cast<double>(1.0 / draws) << endl;
         probs.push_back(static_cast<double>(1.0 / draws));
     }
@@ -396,7 +437,9 @@ int main()
     cout << "let's deal..." << endl;
     vector<Card *> hand = d->deal();
     printDeal(hand);
-    cout << "let's calculate the probability of a straight flush for " << kTrials << " trials." << endl;
+    cout << "let's calculate the probability of a flush." << endl;
+    cout << probFlush(*d) << endl;
+    cout << "let's calculate the probability of a straight flush." << endl;
     cout << probStraightFlush(*d) << endl;
     delete d;
     return 0;
