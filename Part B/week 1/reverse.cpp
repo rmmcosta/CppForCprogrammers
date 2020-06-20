@@ -13,9 +13,9 @@ inline void printSeq(const vector<int> &seq)
 }
 
 template <typename T>
-void mySwap(T &a, T &b)
+void mySwap(T a, T b)
 {
-    T temp = *a;
+    auto temp = *a;
     *a = *b;
     *b = temp;
 }
@@ -26,7 +26,7 @@ void myReverse(bidirectional begin, bidirectional end)
     --end; //because the end points to a non-value after the last value
     while (begin < end)
     {
-        swap(*begin, *end);
+        mySwap(begin, end);
         begin++;
         end--;
     }

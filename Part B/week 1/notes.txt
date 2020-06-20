@@ -48,3 +48,5 @@ c++ 11 features:
         - create abstract types for the card
         - use vector and shuffle from stl
 - always use the most efficient algorithm and the weakest iterator
+
+- hoare quicksort is the most used algorithm to sort things up
