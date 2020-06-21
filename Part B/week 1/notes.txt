@@ -50,3 +50,14 @@ c++ 11 features:
 - always use the most efficient algorithm and the weakest iterator
 
 - hoare quicksort is the most used algorithm to sort things up
+- when computing the difference between two pointer, we must use 
+the ptrdiff_t type.
+
+STL - Overview of containers:
+    - 2 varieties:
+        - sequence
+            - ordered by sequence of elements
+        - associative
+            - use a key to search for an element
+    - deque, list, vector, set, multiset, map, multimap
+    - new in c++11 -> move constructors, element emplacement, etc.
