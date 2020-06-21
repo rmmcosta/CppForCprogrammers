@@ -61,3 +61,22 @@ STL - Overview of containers:
             - use a key to search for an element
     - deque, list, vector, set, multiset, map, multimap
     - new in c++11 -> move constructors, element emplacement, etc.
+
+- In c++ 11 we have hash based lookup for map and set:
+    - unordered_map
+    - unordered_set
+    - O(1) lookup most of the times
+    - the old ones can also be used but for most of the use cases
+    they will not be so efficient
+        - they use the balance tree algorithm
+            - red black tree
+        - we have features that we don't have in the new
+        - for instance comparison
+
+stl algorithms library:
+    - sort
+        - sort -> based on the quick sort
+        - stable_sort -> elements remain in their same relative position
+            2 1 1 2 -> 1 1 2 2
+    - non-mutating
+        
