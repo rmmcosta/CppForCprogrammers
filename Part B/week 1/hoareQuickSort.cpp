@@ -24,7 +24,8 @@ inline void mySwap(T &a, T &b)
 template <typename RandomAccess>
 inline RandomAccess partition(RandomAccess start, RandomAccess end)
 {
-    auto pivot = *(start + (end - start) / 2);
+    RandomAccess mid = start + (end - start) / 2;
+    auto pivot = *mid;
     int i = 0;
     while (true)
     {
