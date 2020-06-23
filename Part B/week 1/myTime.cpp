@@ -25,34 +25,38 @@ ostream &operator<<(ostream &out, const MyTime &t)
 }
 MyTime MyTime::operator+(const MyTime &t) const
 {
-    int seconds = hours * 3600 + minutes * 60 + seconds + t.hours * 3600 + t.minutes * 60 + t.seconds;
-    int minutes = seconds / 60;
-    seconds %= 60;
-    int hours = minutes / 60;
-    minutes %= 60;
-    return MyTime(hours, minutes, seconds);
+    cout << "hours * 3600 + minutes * 60 + seconds -> " << hours * 3600 + minutes * 60 + seconds << endl;
+    cout << "t.hours * 3600 + t.minutes * 60 + t.seconds -> " << t.hours * 3600 + t.minutes * 60 + t.seconds << endl;
+    int s = hours * 3600 + minutes * 60 + seconds + t.hours * 3600 + t.minutes * 60 + t.seconds;
+    cout << "seconds " << s << endl;
+    int m = s / 60;
+    cout << "minutes " << m << endl;
+    s %= 60;
+    int h = m / 60;
+    m %= 60;
+    return MyTime(h, m, s);
 }
 MyTime MyTime::operator-(const MyTime &t) const
 {
-    int seconds = (hours * 3600 + minutes * 60 + seconds) - (t.hours * 3600 + t.minutes * 60 + t.seconds);
-    seconds = abs(seconds);
-    int minutes = seconds / 60;
-    seconds %= 60;
-    int hours = minutes / 60;
-    minutes %= 60;
-    return MyTime(hours, minutes, seconds);
+    int s= (hours * 3600 + minutes * 60 + seconds) - (t.hours * 3600 + t.minutes * 60 + t.seconds);
+    s = abs(s);
+    int m = s / 60;
+    s%= 60;
+    int h = m/ 60;
+    m %= 60;
+    return MyTime(h, m, s);
 }
 MyTime MyTime::operator*(double n) const
 {
-    int seconds = hours * 3600 + minutes * 60 + seconds;
-    seconds *= n;
-    int minutes = seconds / 60;
-    seconds %= 60;
-    int hours = minutes / 60;
-    minutes %= 60;
-    return MyTime(hours, minutes, seconds);
+    int s = hours * 3600 + minutes * 60 + seconds;
+    s*= n;
+    int m = s / 60;
+    s %= 60;
+    int h = m / 60;
+    m %= 60;
+    return MyTime(h, m, s);
 }
 MyTime operator*(double n, const MyTime &t)
 {
-    return t*n;
+    return t * n;
 }
