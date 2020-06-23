@@ -79,4 +79,27 @@ stl algorithms library:
         - stable_sort -> elements remain in their same relative position
             2 1 1 2 -> 1 1 2 2
     - non-mutating
+        - typical operation is searching the container 
+        for a particular element
+            - find
+            - find_if
+                - instead of a value we pass a predicate (functor).
+                    - t>0 or something else.
+            - for_each
+                - apply a function to every element in the range
+    - lambda expressions:
+        - come originally from lisp
+        - unnamed functions
+        - in c++:
+            [](int i){cout << i << endl;}
+            [](int n){return n*5.5;}
+            [](int n)-> int {return ++n;}//explicitly say the return type
+    - mutating functions:
+        - copy
+    - numerical algorithms:
+        - sums
+            - accumulate(begin, end, initial_value);
+        - inner products
+            - inner_product(begin, end, initial_value);
+        - adjacent difference
         
