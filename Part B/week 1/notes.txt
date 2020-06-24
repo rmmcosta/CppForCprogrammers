@@ -96,10 +96,27 @@ stl algorithms library:
             [](int n)-> int {return ++n;}//explicitly say the return type
     - mutating functions:
         - copy
-    - numerical algorithms:
-        - sums
-            - accumulate(begin, end, initial_value);
-        - inner products
-            - inner_product(begin, end, initial_value);
-        - adjacent difference
+numerical algorithms:
+    - sums
+        - accumulate(begin, end, initial_value);
+    - inner products
+        - inner_product(begin, end, initial_value);
+    - adjacent difference
+function objects:
+    - are classes with the operator() defined
+    - for example minus<int>
+    - the generator object
+        - see the gen.cpp
+        - we make use of the generate function inside stl algorithm
+        that Generate values for range with function
+
+defined function Object classes
+    - arithmetic objects
+        - #include <functional>
+        - plus<T>, minus<T>, multiplies<T>, divides<T>, modulus<T>, negate<T>
+    - comparison objects
+    - logical objects
+function adapters
+    - bind2nd
+        Return function object with second parameter bound
         
