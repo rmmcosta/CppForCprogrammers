@@ -1,0 +1,11 @@
+- The Hex game
+    - 7x7
+    - blacks, whites and empties
+    - one player plays west to east
+    - the other player plays north to south
+    - the 2nd player can choose to proceed with the first player move
+- srand
+    - the int rand returns a random number between 0 and max int (RAND_MAX)
+    - int rand(void); //cstdlib
+    - with srand(time(NULL))
+        - with srand we can pass a seed
