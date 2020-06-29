@@ -4,15 +4,25 @@
 #include <string>
 using namespace std;
 
-const int kSize = 11;
-
-enum class Color{kBlue, kRed};
+enum class Color
+{
+    kBlue,
+    kRed,
+    kNone
+};
 
 class Board
 {
-    public:
-        void print();
-    private:
-        map<string,Color> plays;
+public:
+    Board(int);
+    void start();
+    bool play();
+    friend ostream &operator<<(ostream &out, Board &b);
+    void changeTurn();
+
+private:
+    map<string, Color> plays;
+    int kSize;
+    Color turn;
 };
 #endif

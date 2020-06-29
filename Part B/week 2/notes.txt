@@ -9,3 +9,20 @@
     - int rand(void); //cstdlib
     - with srand(time(NULL))
         - with srand we can pass a seed
+
+- inheritance:
+    - is a reuse mechanism
+    - in c++ uses pure polymorphism
+        - uses a virtual function mechanism
+
+- The OOP design methodology:
+    1- Decide on a appropriate set of types (classes)
+    2- Design in their relatedness(the relationships between classes)
+    3- Use inheritance to share code among classes
+
+- public inheritance (90% of the use cases)
+    - protected access -> gives access to "family" classes
+    class Dog:public Animal
+    {
+        //the code goes here
+    };
