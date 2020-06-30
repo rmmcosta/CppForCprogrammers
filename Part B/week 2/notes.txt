@@ -26,3 +26,13 @@
     {
         //the code goes here
     };
+    - constructors need to be specified per class
+        - the derived class needs to have its own constructor
+- c++ allows single and multiple inheritance
+- virtual member functions
+    - it's what supports pure polymorphism
+        - dynamic at runtime it will select the appropriate function trough a pointer
+        to the base class
+    - defined in the base class
+    - redefined in the derived class
+        - overwritten
