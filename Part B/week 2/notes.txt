@@ -36,3 +36,7 @@
     - defined in the base class
     - redefined in the derived class
         - overwritten
+
+- use keyword final to prevent further inheritance
+    class point3d final:public point {...};
+    - this will also make the compiler more efficient
