@@ -40,3 +40,27 @@
 - use keyword final to prevent further inheritance
     class point3d final:public point {...};
     - this will also make the compiler more efficient
+
+- the const keyword in the end of a method means
+that the method can't change the instance for whom 
+the method was called
+
+- inheritance comes in 3 flavors:
+    - public (used in 90% of the use cases)
+        - subtype relation
+    - private
+    - and protected
+
+- virtual function 
+    - if you don't use the keyword virtual in a method of
+    a base class, when you have a pointer or a reference to that
+    base class but the original instance is a derived class 
+    the invoked method will be the one associated with the base class
+    and not the one associated with the derived class
+
+- overloaded function/method
+    - selected in compile time based on signature
+    - can have distinct return types
+- overriden function/method
+    - selected in runtime
+    - the signature is the same in the derived classes
