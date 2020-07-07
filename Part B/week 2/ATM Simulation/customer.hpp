@@ -13,12 +13,11 @@ private:
 
 public:
     //given the current cycle and the task duration in number of cycles, creates a customer
-    Customer(int now, int taskDuration) : arrive(now), took(taskDuration){};
+    Customer(int now = 0, int taskDuration = 0) : arrive(now), took(taskDuration){};
     ~Customer();
     void setTurn(int);
-    void setNext(const Customer *);
-    int getWait();
-    bool isDone();
+    void setNext(Customer *);
+    bool isDone(int); //given the number of cycles returns true if is done
     Customer &getNext() const;
     friend ostream &operator<<(ostream &, Customer &);
 };

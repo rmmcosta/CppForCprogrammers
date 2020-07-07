@@ -10,18 +10,24 @@ int getRandDuration();
 
 Queue::~Queue()
 {
-    delete front;
+    Customer *temp;
+    while (front != back)
+    {
+        temp = front;
+        delete front;
+        front = &(temp->getNext());
+    }
     delete back;
 }
 
 bool Queue::enqueue(int now)
 {
-    if (isFull)
+    if (isFull())
     {
         cout << "The queue is full" << endl;
         return false;
     }
-    if (isEmpty)
+    if (isEmpty())
     {
         front = new Customer(now, getRandDuration());
         back = front;
@@ -30,21 +36,26 @@ bool Queue::enqueue(int now)
     back->setNext(temp);
     back = temp;
     currSize++;
+    return true;
 }
 
-Customer &Queue::dequeue(int now)
+void Queue::dequeue(int now, Customer &customer)
 {
     if (currSize == 0)
     {
         cout << "No one in the queue." << endl;
         return;
     }
-    Customer temp = *front;
-    front = &temp.getNext();
+    if(!front->isDone(now))
+    {
+        cout << "Not done yet" << endl;
+        return;
+    }
+    customer = *front;
+    front = &customer.getNext();
     front->setTurn(now);
     front->setNext(nullptr);
     currSize--;
-    return temp;
 }
 
 bool Queue::isFull()
@@ -59,16 +70,17 @@ bool Queue::isEmpty()
 
 ostream &operator<<(ostream &out, Queue &q)
 {
-    if(q.isEmpty())
+    if (q.isEmpty())
     {
         cout << "No one in the queue" << endl;
         return out;
     }
     Customer *i = q.front;
-    while(i!=nullptr)
+    while (i != nullptr)
     {
         cout << *i << endl;
     }
+    return out;
 }
 
 int getRandDuration()
