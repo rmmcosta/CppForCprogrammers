@@ -1,13 +1,18 @@
 #include "queue.hpp"
+#include <cmath>
 #include <vector>
 
 const int kCycleDuration = 1; //duration in minutes
 
 bool newCustomer(double);
+double getAvgWaits(const vector<int> &);
 
 int main()
 {
-    Queue q1;
+    cout << "What will be the queue size? ";
+    int queueSize;
+    cin >> queueSize;
+    Queue q1(queueSize);
     cout << q1;
     cout << "How many hours do you want to simulate? ";
     int hours;
@@ -18,34 +23,60 @@ int main()
     int cycles = hours * 60 / kCycleDuration;
     double minPerHour = 60 / customerPerHour;
     srand(time(0));
-    int total = 0;
-    Customer *temp = new Customer();
-    vector<Customer *> customers;
+    int served = 0;
+    int turnaways = 0;
+    double sumSizes = 0.0;
+    Customer temp;
+    vector<Customer> customers;
+    vector<int> waits;
     for (int i = 0; i < cycles; i += kCycleDuration)
     {
+        sumSizes += q1.getSize();
         if (newCustomer(minPerHour))
         {
-            q1.enqueue(i);
-            total++;
+            if (q1.enqueue(i))
+            {
+                served++;
+            }
+            else
+            {
+                turnaways++;
+            }
         }
-        q1.dequeue(i, *temp);
-        if (temp->isDone(i))
+        if (q1.dequeue(i, temp))
         {
             customers.push_back(temp);
-            delete temp;
-            temp = new Customer();
+            waits.push_back(temp.getWait());
         }
     }
-    cout << total << endl;
-    cout << "atm customers " << customers.size() << endl;
-    for (auto iter = customers.begin(); iter!= customers.end(); iter++)
-    {
-        cout << *(*iter) << endl;
-    }
+    cout << "customers accepted " << served << endl;
+    cout << "customers served " << customers.size() << endl;
+    cout << "turnaways " << turnaways << endl;
+    cout << "average waits " << getAvgWaits(waits) << endl;
+    cout << "average sizes " << sumSizes / cycles << endl;
+    // for (auto iter = customers.begin(); iter != customers.end(); iter++)
+    // {
+    //     cout << *iter << endl;
+    // }
     return 0;
+}
+
+double getAvgWaits(const vector<int> &waits)
+{
+    double sum = 0.0;
+    for (auto iter = waits.begin(); iter != waits.end(); iter++)
+    {
+        sum += *iter;
+    }
+    return sum / waits.size();
 }
 
 bool newCustomer(double minPerHour)
 {
-    return rand() * minPerHour / RAND_MAX < 1;
+    cout << "inside new customer " << minPerHour << endl;
+    double res = rand() * minPerHour / RAND_MAX;
+    cout << "res " << res << endl;
+    bool temp = res < 1;
+    cout << "temp " << temp << endl;
+    return temp;
 }

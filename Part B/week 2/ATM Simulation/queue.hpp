@@ -17,9 +17,10 @@ public:
     Queue(int size = kDefaultSize) : kMaxSize(size), front(nullptr), back(nullptr), currSize(0){};
     ~Queue();
     bool enqueue(int);
-    void dequeue(int, Customer &);
+    bool dequeue(int, Customer &);
     bool isFull();
     bool isEmpty();
+    int getSize();
     friend ostream &operator<<(ostream &, Queue &);
 };
 #endif

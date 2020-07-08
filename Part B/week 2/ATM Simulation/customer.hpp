@@ -18,7 +18,8 @@ public:
     void setTurn(int);
     void setNext(Customer *);
     bool isDone(int); //given the number of cycles returns true if is done
-    Customer &getNext() const;
+    int getWait();
+    Customer *getNext() const;
     friend ostream &operator<<(ostream &, Customer &);
 };
 #endif

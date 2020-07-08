@@ -6,56 +6,66 @@ using namespace std;
 
 const int kMaxDuration = 5;
 
-int getRandDuration();
+int getRandDuration(int);
 
 Queue::~Queue()
 {
+    //cout << "begin ~Queue" << endl;
     Customer *temp;
     while (front != back)
     {
         temp = front;
         delete front;
-        front = &(temp->getNext());
+        front = temp->getNext();
     }
     delete back;
+    //cout << "end ~Queue" << endl;
 }
 
 bool Queue::enqueue(int now)
 {
     if (isFull())
     {
-        cout << "The queue is full" << endl;
+        //cout << "The queue is full" << endl;
         return false;
     }
     if (isEmpty())
     {
-        front = new Customer(now, getRandDuration());
+        front = new Customer(now, getRandDuration(now));
+        front->setTurn(now);
         back = front;
+        currSize++;
+        return true;
     }
-    Customer *temp = new Customer(now, getRandDuration());
+    Customer *temp = new Customer(now, getRandDuration(now));
     back->setNext(temp);
     back = temp;
     currSize++;
     return true;
 }
 
-void Queue::dequeue(int now, Customer &customer)
+bool Queue::dequeue(int now, Customer &customer)
 {
     if (currSize == 0)
     {
-        cout << "No one in the queue." << endl;
-        return;
+        //cout << "No one in the queue." << endl;
+        return false;
     }
-    if(!front->isDone(now))
+    if (!front->isDone(now))
     {
-        cout << "Not done yet" << endl;
-        return;
+        //cout << "Not done yet" << endl;
+        return false;
     }
+    //cout << "start dequeue" << endl;
     customer = *front;
-    front = &customer.getNext();
-    front->setTurn(now);
-    front->setNext(nullptr);
+    if (customer.getNext() != nullptr)
+    {
+        front = customer.getNext();
+        front->setTurn(now);
+    }
     currSize--;
+    //cout << "end dequeue" << endl;
+    return true;
 }
 
 bool Queue::isFull()
@@ -68,6 +78,11 @@ bool Queue::isEmpty()
     return currSize == 0;
 }
 
+int Queue::getSize()
+{
+    return currSize;
+}
+
 ostream &operator<<(ostream &out, Queue &q)
 {
     if (q.isEmpty())
@@ -75,16 +90,18 @@ ostream &operator<<(ostream &out, Queue &q)
         cout << "No one in the queue" << endl;
         return out;
     }
+    cout << "---------- queue -----------" << endl;
     Customer *i = q.front;
     while (i != nullptr)
     {
         cout << *i << endl;
+        i = i->getNext();
     }
     return out;
 }
 
-int getRandDuration()
+int getRandDuration(int now)
 {
-    srand(time(0));
+    srand(time(0) / now);
     return rand() % 5;
 }
