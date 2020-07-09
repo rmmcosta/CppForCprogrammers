@@ -14,9 +14,9 @@ Queue::~Queue()
     Customer *temp;
     while (front != back)
     {
-        temp = front;
+        temp = front->getNext();
         delete front;
-        front = temp->getNext();
+        front = temp;
     }
     delete back;
     //cout << "end ~Queue" << endl;

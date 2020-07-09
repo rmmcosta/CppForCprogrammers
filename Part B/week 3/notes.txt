@@ -1,0 +1,11 @@
+basic min-max algorithm
+
+move semantics (new in c++11)
+
+in c++11 we have <array>
+    - is a sequential container class that 
+    specifies at compile time a fixed length array
+    - high level efficiency of a raw array (c array)
+    but also gives you extra functionality
+
+typically move semantics are used for container classes

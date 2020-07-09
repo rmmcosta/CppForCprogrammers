@@ -59,6 +59,8 @@ int main()
     // {
     //     cout << *iter << endl;
     // }
+    customers.clear();
+    waits.clear();
     return 0;
 }
 
