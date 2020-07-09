@@ -1,6 +1,6 @@
 #include "dog.hpp"
 
-void Dog::bark()
+void Dog::bark() const
 {
     cout << name << " is barking" << endl;
 }

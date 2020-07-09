@@ -1,4 +1,8 @@
 #include "dog.hpp"
+#include <vector>
+
+void move(Animal &);
+void move(Dog &);
 
 int main()
 {
@@ -10,10 +14,38 @@ int main()
     cout << d2;
     d2.bark();
     cout << d2.count << endl;
-    Position p2 = d2.getPosition();
-    cout << p2 << endl;
-    d2.walk();
-    p2 = d2.getPosition();
-    cout << p2 << endl;
+    cout << "move your dog ass d2" << endl;
+    move(d2);
+    Animal aDog(d2);
+    cout << "a dog like an animal" << endl;
+    move(aDog);
+    vector<Animal *> animals;
+    animals.push_back(new Dog("Pug", "Shinoka", 1));
+    animals.push_back(new Animal("Animal", "Unknown", 5));
+    cout << "now a iterate over animals" << endl;
+    for (auto iter = animals.begin(); iter != animals.end(); iter++)
+    {
+        (*iter)->walk();
+        Position aPos = (*iter)->getPosition();
+        cout << "animal position " << aPos << endl;
+    }
+    //virtual function when used with pointer allows to call the correct method
+    //even if an upcast occurred
     return 0;
+}
+
+void move(Animal &a)
+{
+    cout << "move called for " << a << endl;
+    a.walk();
+    Position aPos = a.getPosition();
+    cout << "animal position " << aPos << endl;
+}
+
+void move(Dog &a)
+{
+    cout << "move called for " << a << endl;
+    a.walk();
+    Position aPos = a.getPosition();
+    cout << "animal position " << aPos << endl;
 }

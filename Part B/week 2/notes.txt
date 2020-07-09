@@ -64,3 +64,10 @@ the method was called
 - overriden function/method
     - selected in runtime
     - the signature is the same in the derived classes
+
+virtual function when used with pointer allows to call the correct method
+    even if an upcast occurred
+
+constructors can't be virtual
+    can be emulated by using the factory pattern
+but destructors can be virtual

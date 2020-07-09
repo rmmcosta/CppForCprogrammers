@@ -15,7 +15,7 @@ protected:
 public:
     Animal(string, string, int);
     virtual void walk();
-    Position getPosition() { return p; }
+    Position getPosition() const { return p; }
     friend ostream &operator<<(ostream &, Animal &);
     static int count;
 };
