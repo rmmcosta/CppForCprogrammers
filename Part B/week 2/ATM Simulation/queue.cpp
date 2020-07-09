@@ -24,6 +24,7 @@ Queue::~Queue()
 
 bool Queue::enqueue(int now)
 {
+    //cout << "enqueue " << now << endl;
     if (isFull())
     {
         //cout << "The queue is full" << endl;
@@ -31,16 +32,19 @@ bool Queue::enqueue(int now)
     }
     if (isEmpty())
     {
+        //cout << "queue is empty to enqueue" << endl;
         front = new Customer(now, getRandDuration(now));
         front->setTurn(now);
         back = front;
         currSize++;
+        //cout << "end enqueue was empty" << endl;
         return true;
     }
     Customer *temp = new Customer(now, getRandDuration(now));
     back->setNext(temp);
     back = temp;
     currSize++;
+    //cout << "end enqueue" << endl;
     return true;
 }
 
@@ -80,6 +84,7 @@ bool Queue::isEmpty()
 
 int Queue::getSize()
 {
+    //cout << "get size" << endl;
     return currSize;
 }
 
@@ -102,6 +107,6 @@ ostream &operator<<(ostream &out, Queue &q)
 
 int getRandDuration(int now)
 {
-    srand(time(0) / now);
+    srand(time(0) / (now+1));
     return rand() % 5;
 }

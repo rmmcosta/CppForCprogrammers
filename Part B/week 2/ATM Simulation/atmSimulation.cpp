@@ -31,6 +31,7 @@ int main()
     vector<int> waits;
     for (int i = 0; i < cycles; i += kCycleDuration)
     {
+        //cout << "i " << i << endl;
         sumSizes += q1.getSize();
         if (newCustomer(minPerHour))
         {
@@ -73,10 +74,10 @@ double getAvgWaits(const vector<int> &waits)
 
 bool newCustomer(double minPerHour)
 {
-    cout << "inside new customer " << minPerHour << endl;
+    //cout << "inside new customer " << minPerHour << endl;
     double res = rand() * minPerHour / RAND_MAX;
-    cout << "res " << res << endl;
+    //cout << "res " << res << endl;
     bool temp = res < 1;
-    cout << "temp " << temp << endl;
+    //cout << "temp " << temp << endl;
     return temp;
 }
