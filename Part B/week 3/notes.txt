@@ -9,3 +9,42 @@ in c++11 we have <array>
     but also gives you extra functionality
 
 typically move semantics are used for container classes
+
+the use of explicit in the constructor turns off any conversions
+that otherwhise could be made
+
+we can also call another constructor in the initializer list
+explicit MyContainer(T *b):MyContainer()
+{
+    for(int i=0;i<n;i++)
+        a[i] = b[i];
+}
+
+don't forget about the copy constructor
+MyContainer(const MyContainer &arr):MyContainer()
+{
+    for(int i=0;i<n;i++)
+        arr[i] = b[i];
+}
+
+types of constructors:
+    default -> () -> void signature
+    1 arg -> conversion
+    copy constructor -> MyClass(const MyClass &)...
+
+new in c++11:
+    - move constructor (move semantics)
+    MyClass(MyClass &&b)noexcept
+        -> && "right" side reference (rvalue adress)
+        - & "left" side reference
+        -> noexcept -> no exceptions will be thrown
+        - inside this constructor we can use a shallow copy (also called referential copy):
+            a = b.a;
+            b.a = nullptr;
+    - usually we also need to override the assignment operator
+    - this is specially useful for swapping aggregates
+
+min-max algorithm:
+    - lookahead algorithm
+        -tree lookahead -> lookahead as a graph
+        - Ply is the depth of the tree (how far the machine goes into the tree)
