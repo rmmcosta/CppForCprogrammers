@@ -48,3 +48,10 @@ min-max algorithm:
     - lookahead algorithm
         -tree lookahead -> lookahead as a graph
         - Ply is the depth of the tree (how far the machine goes into the tree)
+
+- Plausible move generator:
+    - Used for instance for games like Hex in a 11x11 board
+    - Given that the amount of moves are enormous we can't analyze them all
+    - so we limit those moves to a certain level by using the plausible move generator technique
+- when we have a large number of moves
+    - we use game heuristics
