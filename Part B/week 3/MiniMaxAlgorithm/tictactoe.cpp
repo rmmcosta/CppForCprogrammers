@@ -1,5 +1,8 @@
 #include "tictactoe.hpp"
 
+Symbol evaluateDiagonals(Board &);
+Symbol evaluateDiagonal00(Board &);
+
 ostream &operator<<(ostream &out, Symbol &s)
 {
     if (s == Symbol::O)
@@ -11,7 +14,7 @@ ostream &operator<<(ostream &out, Symbol &s)
     return out;
 }
 
-ostream &operator<<(ostream &out, Player &p)
+ostream &operator<<(ostream &out, const Player &p)
 {
     out << p.symbol;
     return out;
@@ -68,4 +71,59 @@ void Board::definePlayers(Player *first, Player *second)
     turn = first;
     p1 = first;
     p2 = second;
+}
+
+void Board::evaluate()
+{
+    if (moves.size() == 0)
+    {
+        cout << "New game" << endl;
+        return;
+    }
+    //not enough moves to win
+    if (moves.size() < 2 * size - 1)
+        return;
+    //brute force algorithm
+    //diagonals
+    Symbol s = evaluateDiagonals(*this);
+    if (s != Symbol::None)
+    {
+        cout << "Player " << s << " Won!" << endl;
+        return;
+    }
+    //draw
+    if (moves.size() == size * size)
+        cout << "It's a draw" << endl;
+}
+
+Symbol evaluateDiagonals(Board &b)
+{
+    Symbol s = evaluateDiagonal00(b);
+    return s;    
+}
+
+Symbol evaluateDiagonal00(Board &b)
+{
+    //0,0-1,1-2,2
+    int i = 0, j = 0;
+    Symbol s = Symbol::None;
+    while (i < b.getSize() - 1 && j < b.getSize() - 1)
+    {
+        if (b.getPlayer_forPosition(i, j).getSymbol() == Symbol::None)
+            return Symbol::None;
+        if (s == Symbol::None)
+        {
+            s = b.getPlayer_forPosition(i, j).getSymbol();
+            i++;
+            j++;
+            continue;
+        }
+        if (s != b.getPlayer_forPosition(i, j).getSymbol())
+        {
+            return Symbol::None;
+        }
+        i++;
+        j++;
+    }
+    return s;
 }

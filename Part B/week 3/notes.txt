@@ -55,3 +55,5 @@ min-max algorithm:
     - so we limit those moves to a certain level by using the plausible move generator technique
 - when we have a large number of moves
     - we use game heuristics
+
+- alpha-beta algorithm vs mini-max

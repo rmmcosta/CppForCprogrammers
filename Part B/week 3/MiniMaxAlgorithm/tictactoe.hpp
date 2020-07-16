@@ -17,17 +17,18 @@ ostream &operator<<(ostream &, Symbol &);
 class Player
 {
 private:
-    Symbol symbol;
+    const Symbol symbol;
 
 public:
     Player(Symbol s = Symbol::None) : symbol(s) {}
-    friend ostream &operator<<(ostream &, Player &);
+    friend ostream &operator<<(ostream &, const Player &);
+    Symbol getSymbol() const { return symbol; }
 };
 
 class Board
 {
 private:
-    int size;
+    const int size;
     map<string, Player *> moves;
     Player *turn;
     Player *p1, *p2;
@@ -38,5 +39,8 @@ public:
     Player getPlayer_forPosition(int, int);
     void definePlayers(Player *, Player *);
     void makeMove(int, int);
+    void evaluate();
+    int getHowManyMoves() { return moves.size(); }
+    int getSize() const { return size; }
 };
 #endif
