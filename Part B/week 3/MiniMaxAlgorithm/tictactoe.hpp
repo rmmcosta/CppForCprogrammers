@@ -17,11 +17,12 @@ ostream &operator<<(ostream &, Symbol &);
 class Player
 {
 private:
-    const Symbol symbol;
+    Symbol symbol;
+    bool isComputer;
 
 public:
-    Player(Symbol s = Symbol::None) : symbol(s) {}
-    friend ostream &operator<<(ostream &, const Player &);
+    Player(Symbol s = Symbol::None, bool isComputer = false) : symbol(s), isComputer(isComputer) {}
+    friend ostream &operator<<(ostream &, Player &);
     Symbol getSymbol() const { return symbol; }
 };
 
@@ -32,6 +33,7 @@ private:
     map<string, Player *> moves;
     Player *turn;
     Player *p1, *p2;
+    bool isOver;
 
 public:
     Board(int s = 3) : size(s) {}
@@ -42,5 +44,7 @@ public:
     void evaluate();
     int getHowManyMoves() { return moves.size(); }
     int getSize() const { return size; }
+    Player *getTurn();
+    void makeAutoMove();
 };
 #endif
