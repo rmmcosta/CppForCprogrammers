@@ -57,3 +57,19 @@ min-max algorithm:
     - we use game heuristics
 
 - alpha-beta algorithm vs mini-max
+    - similar to mini-max but with cut offs
+    - we don't need to evaluate all the nodes
+    - use the notion of at least
+
+- polish notation:
+    - parenthesis free
+    - an expression is an evaluation tree
+        - parsing is the same thing
+        - leaf nodes have the values
+        - the other nodes are operations
+    - how to build an expression evaluation tree?
+        - we can do it by building a hierarchy
+        - inheritance and virtual functions
+        - Andrew Koenig coded a method for this
+        - this can be used to do referential garbage collection
+            - the reference count = 0
