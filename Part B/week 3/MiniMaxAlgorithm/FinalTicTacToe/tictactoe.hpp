@@ -19,7 +19,8 @@ enum class Level
 {
 	EASY = 1,
 	HARD = 2,
-	IMPOSSIBLE = 3
+	IMPOSSIBLE = 3,
+	FASTER = 4
 };
 class Board
 {
@@ -62,6 +63,7 @@ public:
 	int makeMoveAuto();
 	int makeMoveAuto_Hard();
 	int makeMoveAuto_Impossible();
+	int makeMoveAuto_Faster();
 	void showBoard() const;
 	void setPlayer1(const Options, string, Level, bool);
 	void setPlayer2(const Options, string, Level, bool);

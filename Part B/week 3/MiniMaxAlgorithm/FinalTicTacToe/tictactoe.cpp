@@ -3,30 +3,31 @@
 #include <algorithm>
 #include <cmath>
 
-ostream& operator<<(ostream&, const Options&);
-ostream& operator<<(ostream&, const Outcome&);
+ostream &operator<<(ostream &, const Options &);
+ostream &operator<<(ostream &, const Outcome &);
 void printLine(int);
 int selectMode();
-void humanVsHuman(Board&);
-void computerVsHuman(Board&);
-void computerVsHuman_Hard(Board&);
-void computerVsHuman_Impossible(Board&);
-void computerVsComputer(Board&);
+void humanVsHuman(Board &);
+void computerVsHuman(Board &);
+void computerVsHuman_Hard(Board &);
+void computerVsHuman_Impossible(Board &);
+void computerVsHuman_Faster(Board &);
+void computerVsComputer(Board &);
 Options chooseSymbol();
-void endGame(Outcome&, Board&);
-Outcome evaluate(Board&);
-Outcome evaluateDiagonals(Board&);
-Outcome evaluateDiagonal00(Board&);
-Outcome evaluateDiagonal20(Board&);
-Outcome evaluateLines(Board&);
-Outcome evaluateColumns(Board&);
-Outcome evaluateDraw(Board&);
-int previewMove(Board&, int, Outcome);
+void endGame(Outcome &, Board &);
+Outcome evaluate(Board &);
+Outcome evaluateDiagonals(Board &);
+Outcome evaluateDiagonal00(Board &);
+Outcome evaluateDiagonal20(Board &);
+Outcome evaluateLines(Board &);
+Outcome evaluateColumns(Board &);
+Outcome evaluateDraw(Board &);
+int previewMove(Board &, int, Outcome);
 int previewMove_Hard(Board, int, Outcome, bool, int);
-int minimax(Board&, int, bool);
-int findBestMove(Board&);
+int minimax(Board &, int, bool);
+int alphabeta(Board &, int, bool, int, int);
 
-Board::Board(const Board& b)
+Board::Board(const Board &b)
 {
 	//cout << "copy constructor" << endl;
 	this->moves = new Options[b.getSize()];
@@ -43,7 +44,7 @@ Board::Board(const Board& b)
 	//cout << "end copy constructor" << endl;
 }
 
-Board& Board::operator=(const Board& b)
+Board &Board::operator=(const Board &b)
 {
 	//cout << "assignment operator" << endl;
 	this->moves = new Options[b.getSize()];
@@ -60,7 +61,7 @@ Board& Board::operator=(const Board& b)
 	return *this;
 }
 
-ostream& operator<<(ostream& out, const Options& opt)
+ostream &operator<<(ostream &out, const Options &opt)
 {
 	switch (opt)
 	{
@@ -77,7 +78,7 @@ ostream& operator<<(ostream& out, const Options& opt)
 	return out;
 }
 
-ostream& operator<<(ostream& out, const Outcome& outcome)
+ostream &operator<<(ostream &out, const Outcome &outcome)
 {
 	switch (outcome)
 	{
@@ -136,7 +137,7 @@ void Board::showBoard() const
 			printLine(xMax * 3);
 	}
 	cout << endl
-		<< endl;
+		 << endl;
 }
 
 void printLine(int n)
@@ -167,6 +168,9 @@ void Board::start()
 		computerVsHuman_Impossible(*this);
 		break;
 	case 5:
+		computerVsHuman_Faster(*this);
+		break;
+	case 6:
 		computerVsComputer(*this);
 		break;
 	default:
@@ -188,24 +192,25 @@ void Board::setPlayer2(const Options symbol, string name, Level level, bool isHu
 int selectMode()
 {
 	int mode = -1;
-	while (mode < 1 || mode > 6)
+	while (mode < 1 || mode > 7)
 	{
 		cout << "Please select the mode:" << endl;
 		cout << "1 - Human vs Human" << endl;
 		cout << "2 - Computer vs Human (easy)" << endl;
 		cout << "3 - Computer vs Human (hard)" << endl;
 		cout << "4 - Computer vs Human (impossible)" << endl;
-		cout << "5 - Computer vs Computer" << endl;
-		cout << "6 - Quit" << endl;
+		cout << "5 - Computer vs Human (impossible faster)" << endl;
+		cout << "6 - Computer vs Computer" << endl;
+		cout << "7 - Quit" << endl;
 		cout << "->";
 		cin >> mode;
 	}
-	if (mode == 6)
+	if (mode == 7)
 		exit(0);
 	return mode;
 }
 
-void humanVsHuman(Board& b)
+void humanVsHuman(Board &b)
 {
 	cout << "Player 1 name:";
 	string name;
@@ -213,13 +218,13 @@ void humanVsHuman(Board& b)
 	Options symbol = chooseSymbol();
 	b.setPlayer1(symbol, name, Level::EASY, true);
 	cout << endl
-		<< "Player 2 name:";
+		 << "Player 2 name:";
 	cin >> name;
 	symbol = symbol == Options::O ? Options::X : Options::O;
 	b.setPlayer2(symbol, name, Level::EASY, true);
 	b.setTurn(b.getPlayer1());
 }
-void computerVsHuman(Board& b)
+void computerVsHuman(Board &b)
 {
 	cout << "Your name:";
 	string name;
@@ -231,7 +236,7 @@ void computerVsHuman(Board& b)
 	b.setPlayer2(symbol, name, Level::EASY, false);
 	b.setTurn(b.getPlayer1());
 }
-void computerVsHuman_Hard(Board& b)
+void computerVsHuman_Hard(Board &b)
 {
 	cout << "Your name:";
 	string name;
@@ -243,7 +248,7 @@ void computerVsHuman_Hard(Board& b)
 	b.setPlayer2(symbol, name, Level::HARD, false);
 	b.setTurn(b.getPlayer1());
 }
-void computerVsHuman_Impossible(Board& b)
+void computerVsHuman_Impossible(Board &b)
 {
 	cout << "Your name:";
 	string name;
@@ -255,7 +260,19 @@ void computerVsHuman_Impossible(Board& b)
 	b.setPlayer2(symbol, name, Level::IMPOSSIBLE, false);
 	b.setTurn(b.getPlayer1());
 }
-void computerVsComputer(Board& b)
+void computerVsHuman_Faster(Board &b)
+{
+	cout << "Your name:";
+	string name;
+	cin >> name;
+	Options symbol = chooseSymbol();
+	b.setPlayer1(symbol, name, Level::EASY, true);
+	name = "The Computer";
+	symbol = symbol == Options::O ? Options::X : Options::O;
+	b.setPlayer2(symbol, name, Level::FASTER, false);
+	b.setTurn(b.getPlayer1());
+}
+void computerVsComputer(Board &b)
 {
 	string name = "The Computer 1";
 	b.setPlayer1(Options::O, name, Level::IMPOSSIBLE, false);
@@ -305,6 +322,9 @@ void Board::play()
 				break;
 			case Level::IMPOSSIBLE:
 				move = makeMoveAuto_Impossible();
+				break;
+			case Level::FASTER:
+				move = makeMoveAuto_Faster();
 				break;
 			default:
 				break;
@@ -375,7 +395,7 @@ int Board::makeMoveAuto()
 		//cout << "next move :" << freeMoves[freeMoves.size() - 1];
 		int nextMove = freeMoves[freeMoves.size() - 1];
 		//cout << "free move: " << nextMove << endl;
-		Board* tempBoard = new Board(*this);
+		Board *tempBoard = new Board(*this);
 		int tempMax = previewMove(*tempBoard, nextMove, desired);
 		//cout << "temp max: " << tempMax << endl;
 		//cout << "tempMax > max: " << (tempMax > max) << "nextMove: " << nextMove << endl;
@@ -392,7 +412,7 @@ int Board::makeMoveAuto()
 	return move;
 }
 
-int previewMove(Board& newBoard, int move, Outcome desired)
+int previewMove(Board &newBoard, int move, Outcome desired)
 {
 	/*cout << "move: " << move << " desired: " << desired << endl;
 	newBoard.showBoard();*/
@@ -480,7 +500,7 @@ int previewMove_Hard(Board newBoard, int move, Outcome desired, bool isMaximize,
 	}
 }
 
-void endGame(Outcome& outcome, Board& b)
+void endGame(Outcome &outcome, Board &b)
 {
 	switch (outcome)
 	{
@@ -503,7 +523,7 @@ void endGame(Outcome& outcome, Board& b)
 	}
 }
 
-Outcome evaluate(Board& board)
+Outcome evaluate(Board &board)
 {
 	Outcome outcome = evaluateDiagonals(board);
 	if (outcome == Outcome::NONE)
@@ -515,7 +535,7 @@ Outcome evaluate(Board& board)
 	return outcome;
 }
 
-Outcome evaluateDiagonals(Board& b)
+Outcome evaluateDiagonals(Board &b)
 {
 	Outcome s = evaluateDiagonal00(b);
 	if (s != Outcome::NONE)
@@ -524,7 +544,7 @@ Outcome evaluateDiagonals(Board& b)
 	return s;
 }
 
-Outcome evaluateDiagonal00(Board& b)
+Outcome evaluateDiagonal00(Board &b)
 {
 	//cout << "diagonal 00" << endl;
 	//0,0-1,1-2,2
@@ -555,7 +575,7 @@ Outcome evaluateDiagonal00(Board& b)
 	return Outcome::NONE;
 }
 
-Outcome evaluateDiagonal20(Board& b)
+Outcome evaluateDiagonal20(Board &b)
 {
 	//2,0-1,1-0,2
 	//cout << "diagonal 20" << endl;
@@ -586,7 +606,7 @@ Outcome evaluateDiagonal20(Board& b)
 	return Outcome::NONE;
 }
 
-Outcome evaluateLines(Board& b)
+Outcome evaluateLines(Board &b)
 {
 	//cout << "Lines" << endl;
 	Options s = Options::NONE;
@@ -628,7 +648,7 @@ Outcome evaluateLines(Board& b)
 	return Outcome::NONE;
 }
 
-Outcome evaluateColumns(Board& b)
+Outcome evaluateColumns(Board &b)
 {
 	//cout << "columns" << endl;
 	Options s = Options::NONE;
@@ -672,7 +692,7 @@ Outcome evaluateColumns(Board& b)
 	return Outcome::NONE;
 }
 
-Outcome evaluateDraw(Board& b)
+Outcome evaluateDraw(Board &b)
 {
 	for (int i = 0; i < b.getxMax(); i++)
 	{
@@ -685,7 +705,7 @@ Outcome evaluateDraw(Board& b)
 	return Outcome::DRAW;
 }
 
-Board::Player* Board::getPlayerByOption(Options option) const
+Board::Player *Board::getPlayerByOption(Options option) const
 {
 	if (p1->getSymbol() == option)
 		return p1;
@@ -693,7 +713,7 @@ Board::Player* Board::getPlayerByOption(Options option) const
 		return p2;
 }
 
-int minimax(Board& board, int depth, bool isMax, Outcome desire)
+int minimax(Board &board, int depth, bool isMax, Outcome desire)
 {
 	Outcome currOutcome = evaluate(board);
 	if (currOutcome == desire)
@@ -703,55 +723,54 @@ int minimax(Board& board, int depth, bool isMax, Outcome desire)
 	if (currOutcome != Outcome::NONE)
 		return -10 + depth;
 
-	// If this maximizer's move 
+	// If this maximizer's move
 	if (isMax)
 	{
 		int best = -1000;
 
-		// Traverse all cells 
+		// Traverse all cells
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				// Check if cell is empty 
+				// Check if cell is empty
 				if (board.getMove(i, j) == Options::NONE)
 				{
-					// Make the move 
+					// Make the move
 					Board tempBoard = Board(board);
 					tempBoard.makeMove(i, j);
 
-					// Call minimax recursively and choose 
-					// the maximum value 
+					// Call minimax recursively and choose
+					// the maximum value
 					best = max(best,
-						minimax(tempBoard, depth + 1, !isMax, desire));
-
+							   minimax(tempBoard, depth + 1, !isMax, desire));
 				}
 			}
 		}
 		return best;
 	}
 
-	// If this minimizer's move 
+	// If this minimizer's move
 	else
 	{
 		int best = 1000;
 
-		// Traverse all cells 
+		// Traverse all cells
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				// Check if cell is empty 
+				// Check if cell is empty
 				if (board.getMove(i, j) == Options::NONE)
 				{
-					// Make the move 
+					// Make the move
 					Board tempBoard = Board(board);
 					tempBoard.makeMove(i, j);
 
-					// Call minimax recursively and choose 
-					// the minimum value 
+					// Call minimax recursively and choose
+					// the minimum value
 					best = min(best,
-						minimax(tempBoard, depth + 1, !isMax, desire));
+							   minimax(tempBoard, depth + 1, !isMax, desire));
 				}
 			}
 		}
@@ -759,34 +778,34 @@ int minimax(Board& board, int depth, bool isMax, Outcome desire)
 	}
 }
 
-// This will return the best possible move for the player 
+// This will return the best possible move for the player
 int Board::makeMoveAuto_Impossible()
 {
 	int bestVal = -1000;
 	int bestMove = -1;
 	Outcome desire = getDesire();
 
-	// Traverse all cells, evaluate minimax function for 
-	// all empty cells. And return the cell with optimal 
-	// value. 
+	// Traverse all cells, evaluate minimax function for
+	// all empty cells. And return the cell with optimal
+	// value.
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			// Check if cell is empty 
+			// Check if cell is empty
 			if (getMove(i, j) == Options::NONE)
 			{
-				// Make the move 
+				// Make the move
 				Board tempBoard = Board(*this);
 				tempBoard.makeMove(i, j);
 
-				// compute evaluation function for this 
-				// move. 
+				// compute evaluation function for this
+				// move.
 				int moveVal = minimax(tempBoard, 0, false, desire);
 
-				// If the value of the current move is 
-				// more than the best value, then update 
-				// best/ 
+				// If the value of the current move is
+				// more than the best value, then update
+				// best/
 				if (moveVal > bestVal)
 				{
 					bestMove = i * 3 + j;
@@ -796,7 +815,122 @@ int Board::makeMoveAuto_Impossible()
 		}
 	}
 
-	cout << "The value of the best Move is : " << bestVal << endl << endl;
+	cout << "The value of the best Move is : " << bestVal << endl
+		 << endl;
+
+	return bestMove;
+}
+
+int alphabeta(Board &board, int depth, bool isMax, Outcome desire, int alpha, int beta)
+{
+	Outcome currOutcome = evaluate(board);
+	if (currOutcome == desire)
+		return 10 - depth;
+	if (currOutcome == Outcome::DRAW)
+		return 0;
+	if (currOutcome != Outcome::NONE)
+		return -10 + depth;
+
+	// If this maximizer's move
+	if (isMax)
+	{
+		int best = -1000;
+
+		// Traverse all cells
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				// Check if cell is empty
+				if (board.getMove(i, j) == Options::NONE)
+				{
+					// Make the move
+					Board tempBoard = Board(board);
+					tempBoard.makeMove(i, j);
+
+					// Call minimax recursively and choose
+					// the maximum value
+					best = max(best,
+							   alphabeta(tempBoard, depth + 1, !isMax, desire, alpha, beta));
+					alpha = max(alpha, best);
+					if (beta <= alpha)
+						return best;
+				}
+			}
+		}
+		return best;
+	}
+
+	// If this minimizer's move
+	else
+	{
+		int best = 1000;
+
+		// Traverse all cells
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				// Check if cell is empty
+				if (board.getMove(i, j) == Options::NONE)
+				{
+					// Make the move
+					Board tempBoard = Board(board);
+					tempBoard.makeMove(i, j);
+
+					// Call minimax recursively and choose
+					// the minimum value
+					best = min(best,
+							   alphabeta(tempBoard, depth + 1, !isMax, desire, alpha, beta));
+					beta = min(beta, best);
+					if (beta <= alpha)
+						return best;
+				}
+			}
+		}
+		return best;
+	}
+}
+
+// This will return the best possible move for the player
+int Board::makeMoveAuto_Faster()
+{
+	int bestVal = -1000;
+	int bestMove = -1;
+	Outcome desire = getDesire();
+
+	// Traverse all cells, evaluate minimax function for
+	// all empty cells. And return the cell with optimal
+	// value.
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			// Check if cell is empty
+			if (getMove(i, j) == Options::NONE)
+			{
+				// Make the move
+				Board tempBoard = Board(*this);
+				tempBoard.makeMove(i, j);
+
+				// compute evaluation function for this
+				// move.
+				int moveVal = alphabeta(tempBoard, 0, false, desire, -1000, 1000);
+
+				// If the value of the current move is
+				// more than the best value, then update
+				// best/
+				if (moveVal > bestVal)
+				{
+					bestMove = i * 3 + j;
+					bestVal = moveVal;
+				}
+			}
+		}
+	}
+
+	cout << "The value of the best Move is : " << bestVal << endl
+		 << endl;
 
 	return bestMove;
 }
