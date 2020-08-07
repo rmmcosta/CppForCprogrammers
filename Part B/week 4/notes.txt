@@ -1,0 +1,50 @@
+- hex, alpha-beta and monte carlo evaluation
+- assertions and exception handling
+
+- monte carlo evaluation 
+    - use probabilistic simulation to understand a phenomena
+
+- when you have a lot of available moves you can't run them all:
+    - classic lookahead game - AI:
+        - evaluate the current position
+        - select plausible moves
+            - use a certain criteria:
+                - captures
+                - checks
+                - advance a pawn
+        - look at responses 
+            - until reaching leaf nodes 
+                - positions capable of static evaluation
+                - sometimes we will need to make a guess (probabilistic)
+        - apply alpha-beta to pick move
+
+- monte carlo is a simulation where we make heavy use of the ability to 
+use pseudo random number generators to provide large number of trials
+    - can be used to predict real world odds for events and games
+
+- when using monte carlo for the game of hex we will run as many trials as we can
+choosing the next move at random
+    - in the end we will know how many times a certain player was able to win
+    when starting by a certain move
+    - with the random generator rand() we can obtain a probability by doing the following:
+        - (1.0*rand())/RAND_MAX
+    - the position's value is reflected in wins/losses when played out
+    by taking turns making random moves
+    - in case of hex to determine who won we must aim for efficiency
+        - for that we can use a specialized dijkstra algorithm
+        - or the union find algorithm:
+            - https://algs4.cs.princeton.edu/15uf/
+    - because we want to do huge amounts of trials in an efficient way
+    - stl-shuffle method:
+        - http://www.cplusplus.com/reference/algorithm/shuffle/
+        - shuffle all the nodes
+        - have a data structure keeping track of the nodes of the hex board
+            - shuffle them and fill the first half with black stones
+            - and the second half with white stones
+            - random placement accomplished 
+    - only evaluate who won in the end
+        - do all the moves even if someone already won
+        - doing moves is cheap, evaluate who won is not
+    - special dijkstra for hex win:
+        - if the board is full and there is no path from N to S for player 1 then player 2
+        has to have won.
