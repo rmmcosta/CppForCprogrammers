@@ -48,3 +48,17 @@ choosing the next move at random
     - special dijkstra for hex win:
         - if the board is full and there is no path from N to S for player 1 then player 2
         has to have won.
+
+- Requirements:
+    - expect move selection to take on the order of
+    2 minutes or less
+    - try to get between 100-1000 MC simulations for each leagal move
+    - you can use multi threading to run independent monte carlo simulations
+    as long as they use different pseudo random generator seeds
+
+Hex rules:
+    - don't forget about pie rule
+        - where the 2nd player can choose to steal the 1st player move
+    - if the 1st player plays perfectly he will always win
+    - so, if the 2nd player steals the 1st player first move he will have the guarantee to 
+    win if he plays perfectly
