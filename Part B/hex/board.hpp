@@ -15,8 +15,6 @@ private:
     void printLineSeparator(int);
     void printColumnSeparator();
     void printIdent(int);
-    string getTextPos(int, int);
-    bool posFree(string pos);
     Choice turn;
     bool finish();
     Choice computer;
@@ -27,6 +25,13 @@ public:
     void setup();
     void play();
     void print();
-    void makeMove(int, int);
+    void makeMove(string);
+    void insertMove(string, Choice);
+    int getSize() {
+        return size;
+    }
+    static string getTextPos(int, int);
+    bool posFree(string pos);
+    Choice whoWon();
 };
 #endif

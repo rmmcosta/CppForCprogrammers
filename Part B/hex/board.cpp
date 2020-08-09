@@ -1,5 +1,13 @@
 #include "board.hpp"
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random> 
+#include <chrono>
+
+const int kTrials = 100;
+
+int getSimulatedWins(Board, string, Choice);
 
 void Board::print()
 {
@@ -93,11 +101,11 @@ void Board::setup()
     turn = Choice::kBLUE;
 }
 
-void Board::makeMove(int i, int j)
+void Board::makeMove(string textPos)
 {
-    if (moves.find(getTextPos(i, j))==moves.end())
+    if (moves.find(textPos)==moves.end())
     {
-        moves.insert(pair<string, Choice>(getTextPos(i, j), turn));
+        moves.insert(pair<string, Choice>(textPos, turn));
         turn = turn==Choice::kBLUE?Choice::kRED:Choice::kBLUE;
     }
     else
@@ -119,7 +127,7 @@ void Board::play()
             cout << "j: " << endl;
             int j;
             cin >> j;
-            makeMove(i, j);
+            makeMove(getTextPos(i, j));
         }
         else
         {
@@ -131,18 +139,71 @@ void Board::play()
 
 void Board::makeComputerMove()
 {
+    vector<string> freeMoves;
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            if (posFree(getTextPos(i, j)))
+            string textPos = getTextPos(i, j);
+            if (posFree(textPos))
             {
-                makeMove(i, j);
-                printMoves();
-                return;
+                freeMoves.push_back(textPos);
             }
         }
     }
+    string bestMove;
+    int bestWin = 0;
+    int evaluatedMoves = 0;
+    while (evaluatedMoves < freeMoves.size())
+    {
+        int wins = getSimulatedWins(*this, freeMoves[evaluatedMoves], this->turn);
+        if (wins>bestWin)
+        {
+            bestWin = wins;
+            bestMove=freeMoves[evaluatedMoves];
+        }
+        evaluatedMoves++;
+    }
+    this->makeMove(bestMove);
+}
+
+int getSimulatedWins(Board b, string firstMove, Choice turn)
+{
+    int numWins = 0;
+    int numTrials = 0;
+    b.insertMove(firstMove, turn);
+    Choice nextTurn = turn==Choice::kRED?Choice::kBLUE:Choice::kRED;
+    vector<string> freeMoves;
+    for (int i = 0; i < b.getSize(); i++)
+    {
+        for (int j = 0; j < b.getSize(); j++)
+        {
+            string textPos = Board::getTextPos(i, j);
+            if (b.posFree(textPos))
+            {
+                freeMoves.push_back(textPos);
+            }
+        }
+    }
+    while (numTrials<kTrials)
+    {
+        Board tempBoard = b;
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+        shuffle(freeMoves.begin(), freeMoves.end(), std::default_random_engine(seed));
+        int movesLeft = freeMoves.size();
+        for (int i = 0; i < movesLeft; i++)
+        {
+            if (i<=movesLeft/2)
+                tempBoard.insertMove(freeMoves[i], nextTurn);
+            else
+                tempBoard.insertMove(freeMoves[i], nextTurn==Choice::kRED?Choice::kBLUE:Choice::kRED);
+        }
+        if (tempBoard.whoWon()==turn)
+            numWins++;
+        numTrials++;
+    }
+    return numWins;
 }
 
 ostream& operator<<(ostream& out, Choice& c)
@@ -174,4 +235,14 @@ void Board::printMoves()
 bool Board::finish()
 {
     return moves.size() == size*size;
+}
+
+void Board::insertMove(string s, Choice c)
+{
+    moves.insert(pair<string, Choice>(s, c));
+}
+
+Choice Board::whoWon()
+{
+    return turn;
 }
