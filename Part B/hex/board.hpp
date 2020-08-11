@@ -1,15 +1,18 @@
 #include <map>
 #include <string>
+#include <vector>
 using namespace std;
 #ifndef BOARD_HPP
 #define BOARD_HPP
 enum class Choice {
     kNONE=0, kRED=1, kBLUE=2
 };
+
 class Board
 {
 private:
     map<string, Choice> moves;
+    map<string, vector<string>> connections;
     int size;
     void printMove(int, int);
     void printLineSeparator(int);
@@ -20,8 +23,16 @@ private:
     Choice computer;
     void makeComputerMove();
     void printMoves();
+    void buildConnections();
+    void printConnections();
+    bool blueWon();
+    bool redWon();
+    bool findWinPath(string, Choice, vector<string>);
+    bool isFinalPosition(string, Choice);
 public:
-    Board(int size=11) :size(size) {}
+    Board(int size=11) :size(size) {
+        buildConnections();
+    }
     void setup();
     void play();
     void print();

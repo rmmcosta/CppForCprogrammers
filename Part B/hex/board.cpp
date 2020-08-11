@@ -1,13 +1,13 @@
 #include "board.hpp"
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #include <random> 
 #include <chrono>
 
-const int kTrials = 100;
+const int kTrials = 1000;
 
 int getSimulatedWins(Board, string, Choice);
+bool isPresentInVector(vector<string>, string);
 
 void Board::print()
 {
@@ -134,6 +134,17 @@ void Board::play()
             makeComputerMove();
         }
         print();
+        Choice c = whoWon();
+        if (c==computer)
+        {
+            cout << "Computer wins"<< endl;
+            break;
+        }
+        if (c!=Choice::kNONE)
+        {
+            cout << "you win"<< endl;
+            break;
+        }
     }
 }
 
@@ -188,21 +199,24 @@ int getSimulatedWins(Board b, string firstMove, Choice turn)
     while (numTrials<kTrials)
     {
         Board tempBoard = b;
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        unsigned seed = chrono::system_clock::now().time_since_epoch().count()+numTrials;
 
-        shuffle(freeMoves.begin(), freeMoves.end(), std::default_random_engine(seed));
+        shuffle(freeMoves.begin(), freeMoves.end(), default_random_engine(seed));
         int movesLeft = freeMoves.size();
         for (int i = 0; i < movesLeft; i++)
         {
-            if (i<=movesLeft/2)
+            if (i<movesLeft/2)
                 tempBoard.insertMove(freeMoves[i], nextTurn);
             else
                 tempBoard.insertMove(freeMoves[i], nextTurn==Choice::kRED?Choice::kBLUE:Choice::kRED);
         }
+        //tempBoard.print();
         if (tempBoard.whoWon()==turn)
             numWins++;
         numTrials++;
     }
+    //cout << "finished trials" << endl;
+    //cout << "num wins" << numWins << endl;
     return numWins;
 }
 
@@ -242,7 +256,189 @@ void Board::insertMove(string s, Choice c)
     moves.insert(pair<string, Choice>(s, c));
 }
 
+void Board::buildConnections()
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            vector<string> paths;
+            //vertices with 2 paths
+            if (i==0 && j==0)
+            {
+                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i+1, j));
+            }
+            if (i==size-1 && j==size-1)
+            {
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i-1, j));
+            }
+            //vertices with 3 paths
+            if (i==0 && j==size-1)
+            {
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i+1, j-1));
+            }
+            if (i==size-1 && j==0)
+            {
+                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i-1, j+1));
+                paths.push_back(getTextPos(i, j+1));
+            }
+            //line nodes with 4 paths
+            if (i==0 && j>0 && j<size-1)
+            {
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i+1, j-1));
+                paths.push_back(getTextPos(i+1, j));
+            }
+            if (i==size-1 && j>0 && j<size-1)
+            {
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i-1, j+1));
+                paths.push_back(getTextPos(i-1, j));
+            }
+            //column nodes with 4 paths
+            if (j==0 && i>0 && i<size-1)
+            {
+                paths.push_back(getTextPos(i-1, j+1));
+                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i+1, j));
+            }
+            if (j==size-1 && i>0 && i<size-1)
+            {
+                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i+1, j-1));
+            }
+            //all the other node (6 paths)
+            if (i>0 && i<size-1 && j>0 && j<size-1)
+            {
+                paths.push_back(getTextPos(i, j-1));
+                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i-1, j+1));
+                paths.push_back(getTextPos(i+1, j-1));
+                paths.push_back(getTextPos(i+1, j));
+            }
+            connections.insert(pair<string, vector<string>>(getTextPos(i, j), paths));
+        }
+    }
+    printConnections();
+}
+
+void Board::printConnections()
+{
+    for (auto it=connections.begin();it!=connections.end();it++)
+    {
+        cout << it->first << ": ";
+        for (auto it2=it->second.begin();it2!=it->second.end();it2++)
+            cout << *it2 << "\t";
+        cout << endl;
+    }
+}
+
 Choice Board::whoWon()
 {
-    return turn;
+    //check blue path (Top-Bottom)
+        //see if there's a connection between the first line and the last
+    if (redWon())
+        return Choice::kRED;
+    //check red path (Left-Right)
+        //see if there's a connection between the first column and the last
+    if (blueWon())
+        return Choice::kBLUE;
+    return Choice::kNONE;
+}
+
+bool Board::redWon()
+{
+    bool result;
+    for (int j = 0; j < size; j++)
+    {
+        vector<string> dummyVector;
+        result = findWinPath(getTextPos(0, j), Choice::kRED, dummyVector);
+        if (result)
+            break;
+    }
+    //cout << "final red" << endl;
+    return result;
+}
+
+bool Board::blueWon()
+{
+    bool result;
+    for (int i = 0; i < size; i++)
+    {
+        vector<string> dummyVector;
+        result = findWinPath(getTextPos(i, 0), Choice::kBLUE, dummyVector);
+        if (result)
+            break;
+    }
+    //cout << "final blue" << endl;
+    return result;
+}
+
+bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked)
+{
+    //cout << "find win path " << pos << endl;
+    //cout << alreadyChecked.size() << endl;
+    if (!isPresentInVector(alreadyChecked, pos))
+        alreadyChecked.push_back(pos);
+    if (moves.find(pos)->second!=c)
+        return false;
+    if (isFinalPosition(pos, c))
+        return true;
+    vector<string> possiblePaths = connections.find(pos)->second;
+    bool result;
+    for (auto it = possiblePaths.begin();it!=possiblePaths.end();it++)
+    {
+        while (it!=possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
+            it++;
+        if (it==possiblePaths.end())
+            break;
+        //cout << "check result " << *it << endl;
+        result = findWinPath(*it, c, alreadyChecked);
+        //cout << "result " << result << endl;
+        if (result)
+            break;
+    }
+    //cout << "final result" << endl;
+    return result;
+}
+
+bool Board::isFinalPosition(string pos, Choice c)
+{
+    //cout << "is final position" << endl;
+    if (c==Choice::kRED) {
+        int i = stoi(pos.substr(0, pos.find(",")));
+        if (i==size-1)
+            return true;
+        else
+            return false;
+    }
+    else {
+        int j = stoi(pos.substr(pos.find(",")+1, string::npos));
+        if (j==size-1)
+            return true;
+        else
+            return false;
+    }
+}
+
+bool isPresentInVector(vector<string> values, string value)
+{
+    //cout << "is present in vector " << value << endl;
+    for (auto it = values.begin(); it != values.end(); it++)
+    {
+        if (*it==value)
+            return true;
+    }
+    return false;
 }
