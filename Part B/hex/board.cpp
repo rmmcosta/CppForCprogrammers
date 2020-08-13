@@ -1,69 +1,73 @@
 #include "board.hpp"
 #include <iostream>
 #include <algorithm>
-#include <random> 
+#include <random>
 #include <chrono>
+#include <thread>
+#include <future>
+#include <mutex>
 
-const int kTrials = 1000;
+mutex mtx;
+const int kTrials = 300;
 
-int getSimulatedWins(Board, string, Choice);
+void getSimulatedWins(Board, string, Choice, int &, string &);
 bool isPresentInVector(vector<string>, string);
+void executeTrial(Board, vector<string>, Choice, Choice, int, int &);
 
 void Board::print()
 {
     for (int i = 0; i < size; i++)
     {
-        printIdent(i*2);
+        printIdent(i * 2);
         for (int j = 0; j < size; j++)
         {
             printMove(i, j);
-            if (j<size-1)
+            if (j < size - 1)
                 printColumnSeparator();
         }
         cout << endl;
-        if (i<size-1)
+        if (i < size - 1)
             printLineSeparator(i);
     }
-
 }
 
 void Board::printMove(int i, int j)
 {
-    if (j>0)
+    if (j > 0)
         cout << " ";
     string pos = getTextPos(i, j);
     if (posFree(pos))
         cout << ".";
     else
     {
-        if (moves.find(getTextPos(i, j))->second==Choice::kBLUE)
+        if (moves.find(getTextPos(i, j))->second == Choice::kBLUE)
             cout << "X";
-        if (moves.find(getTextPos(i, j))->second==Choice::kRED)
+        if (moves.find(getTextPos(i, j))->second == Choice::kRED)
             cout << "O";
     }
-    if (j<size-1)
+    if (j < size - 1)
         cout << " ";
 }
 
 string Board::getTextPos(int i, int j)
 {
-    return to_string(i)+","+to_string(j);
+    return to_string(i) + "," + to_string(j);
 }
 
 bool Board::posFree(string pos)
 {
-    return moves.find(pos)==moves.end();
+    return moves.find(pos) == moves.end();
 }
 
 void Board::printLineSeparator(int line)
 {
-    printIdent(line*2);
+    printIdent(line * 2);
     for (int i = 0; i < size; i++)
     {
-        if (i==0)
+        if (i == 0)
             cout << " ";
         cout << "\\";
-        if (i<size-1)
+        if (i < size - 1)
             cout << " / ";
     }
     cout << endl;
@@ -94,7 +98,7 @@ void Board::setup()
         cout << " 2 - goes next" << endl;
         cin >> option;
     }
-    if (option==1)
+    if (option == 1)
         computer = Choice::kRED;
     else
         computer = Choice::kBLUE;
@@ -103,10 +107,10 @@ void Board::setup()
 
 void Board::makeMove(string textPos)
 {
-    if (moves.find(textPos)==moves.end())
+    if (moves.find(textPos) == moves.end())
     {
         moves.insert(pair<string, Choice>(textPos, turn));
-        turn = turn==Choice::kBLUE?Choice::kRED:Choice::kBLUE;
+        turn = turn == Choice::kBLUE ? Choice::kRED : Choice::kBLUE;
     }
     else
     {
@@ -135,14 +139,14 @@ void Board::play()
         }
         print();
         Choice c = whoWon();
-        if (c==computer)
+        if (c == computer)
         {
-            cout << "Computer wins"<< endl;
+            cout << "Computer wins" << endl;
             break;
         }
-        if (c!=Choice::kNONE)
+        if (c != Choice::kNONE)
         {
-            cout << "you win"<< endl;
+            cout << "you win" << endl;
             break;
         }
     }
@@ -150,6 +154,7 @@ void Board::play()
 
 void Board::makeComputerMove()
 {
+    chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
     vector<string> freeMoves;
     for (int i = 0; i < size; i++)
     {
@@ -165,25 +170,27 @@ void Board::makeComputerMove()
     string bestMove;
     int bestWin = 0;
     int evaluatedMoves = 0;
+    vector<thread> threads;
     while (evaluatedMoves < freeMoves.size())
     {
-        int wins = getSimulatedWins(*this, freeMoves[evaluatedMoves], this->turn);
-        if (wins>bestWin)
-        {
-            bestWin = wins;
-            bestMove=freeMoves[evaluatedMoves];
-        }
+        threads.push_back(thread(getSimulatedWins, *this, freeMoves[evaluatedMoves], this->turn, ref(bestWin), ref(bestMove)));
         evaluatedMoves++;
     }
+    for (auto &t : threads)
+    {
+        t.join();
+    }
     this->makeMove(bestMove);
+    chrono::duration<double> tick = chrono::system_clock::now() - tinit;
+    cout << "computer move took:" << tick.count() << endl;
 }
 
-int getSimulatedWins(Board b, string firstMove, Choice turn)
+void getSimulatedWins(Board b, string firstMove, Choice turn, int &bestWin, string &bestMove)
 {
-    int numWins = 0;
+    chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
     int numTrials = 0;
     b.insertMove(firstMove, turn);
-    Choice nextTurn = turn==Choice::kRED?Choice::kBLUE:Choice::kRED;
+    Choice nextTurn = turn == Choice::kRED ? Choice::kBLUE : Choice::kRED;
     vector<string> freeMoves;
     for (int i = 0; i < b.getSize(); i++)
     {
@@ -196,31 +203,32 @@ int getSimulatedWins(Board b, string firstMove, Choice turn)
             }
         }
     }
-    while (numTrials<kTrials)
+    array<thread, kTrials> threads;
+    int numWins = 0;
+    for (auto &t : threads)
     {
-        Board tempBoard = b;
-        unsigned seed = chrono::system_clock::now().time_since_epoch().count()+numTrials;
-
-        shuffle(freeMoves.begin(), freeMoves.end(), default_random_engine(seed));
-        int movesLeft = freeMoves.size();
-        for (int i = 0; i < movesLeft; i++)
-        {
-            if (i<movesLeft/2)
-                tempBoard.insertMove(freeMoves[i], nextTurn);
-            else
-                tempBoard.insertMove(freeMoves[i], nextTurn==Choice::kRED?Choice::kBLUE:Choice::kRED);
-        }
-        //tempBoard.print();
-        if (tempBoard.whoWon()==turn)
-            numWins++;
+        t = thread(executeTrial, b, freeMoves, turn, nextTurn, numTrials, ref(numWins));
         numTrials++;
+    }
+
+    for (auto &t : threads)
+    {
+        t.join();
     }
     //cout << "finished trials" << endl;
     //cout << "num wins" << numWins << endl;
-    return numWins;
+    auto tick = chrono::system_clock::now() - tinit;
+    cout << "simulated wins took:" << tick.count() << endl;
+    mtx.lock();
+    if (numWins > bestWin)
+    {
+        bestWin = numWins;
+        bestMove = firstMove;
+    }
+    mtx.unlock();
 }
 
-ostream& operator<<(ostream& out, Choice& c)
+ostream &operator<<(ostream &out, Choice &c)
 {
     switch (c)
     {
@@ -240,7 +248,7 @@ ostream& operator<<(ostream& out, Choice& c)
 void Board::printMoves()
 {
     cout << "moves:" << endl;
-    for (auto it = moves.begin(); it !=moves.end();it++)
+    for (auto it = moves.begin(); it != moves.end(); it++)
     {
         cout << it->first << ", " << it->second << endl;
     }
@@ -248,7 +256,7 @@ void Board::printMoves()
 
 bool Board::finish()
 {
-    return moves.size() == size*size;
+    return moves.size() == size * size;
 }
 
 void Board::insertMove(string s, Choice c)
@@ -264,68 +272,68 @@ void Board::buildConnections()
         {
             vector<string> paths;
             //vertices with 2 paths
-            if (i==0 && j==0)
+            if (i == 0 && j == 0)
             {
-                paths.push_back(getTextPos(i, j+1));
-                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i, j + 1));
+                paths.push_back(getTextPos(i + 1, j));
             }
-            if (i==size-1 && j==size-1)
+            if (i == size - 1 && j == size - 1)
             {
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i - 1, j));
             }
             //vertices with 3 paths
-            if (i==0 && j==size-1)
+            if (i == 0 && j == size - 1)
             {
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i+1, j));
-                paths.push_back(getTextPos(i+1, j-1));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i + 1, j));
+                paths.push_back(getTextPos(i + 1, j - 1));
             }
-            if (i==size-1 && j==0)
+            if (i == size - 1 && j == 0)
             {
-                paths.push_back(getTextPos(i-1, j));
-                paths.push_back(getTextPos(i-1, j+1));
-                paths.push_back(getTextPos(i, j+1));
+                paths.push_back(getTextPos(i - 1, j));
+                paths.push_back(getTextPos(i - 1, j + 1));
+                paths.push_back(getTextPos(i, j + 1));
             }
             //line nodes with 4 paths
-            if (i==0 && j>0 && j<size-1)
+            if (i == 0 && j > 0 && j < size - 1)
             {
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i, j+1));
-                paths.push_back(getTextPos(i+1, j-1));
-                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i, j + 1));
+                paths.push_back(getTextPos(i + 1, j - 1));
+                paths.push_back(getTextPos(i + 1, j));
             }
-            if (i==size-1 && j>0 && j<size-1)
+            if (i == size - 1 && j > 0 && j < size - 1)
             {
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i, j+1));
-                paths.push_back(getTextPos(i-1, j+1));
-                paths.push_back(getTextPos(i-1, j));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i, j + 1));
+                paths.push_back(getTextPos(i - 1, j + 1));
+                paths.push_back(getTextPos(i - 1, j));
             }
             //column nodes with 4 paths
-            if (j==0 && i>0 && i<size-1)
+            if (j == 0 && i > 0 && i < size - 1)
             {
-                paths.push_back(getTextPos(i-1, j+1));
-                paths.push_back(getTextPos(i, j+1));
-                paths.push_back(getTextPos(i-1, j));
-                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i - 1, j + 1));
+                paths.push_back(getTextPos(i, j + 1));
+                paths.push_back(getTextPos(i - 1, j));
+                paths.push_back(getTextPos(i + 1, j));
             }
-            if (j==size-1 && i>0 && i<size-1)
+            if (j == size - 1 && i > 0 && i < size - 1)
             {
-                paths.push_back(getTextPos(i-1, j));
-                paths.push_back(getTextPos(i+1, j));
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i+1, j-1));
+                paths.push_back(getTextPos(i - 1, j));
+                paths.push_back(getTextPos(i + 1, j));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i + 1, j - 1));
             }
             //all the other node (6 paths)
-            if (i>0 && i<size-1 && j>0 && j<size-1)
+            if (i > 0 && i < size - 1 && j > 0 && j < size - 1)
             {
-                paths.push_back(getTextPos(i, j-1));
-                paths.push_back(getTextPos(i, j+1));
-                paths.push_back(getTextPos(i-1, j));
-                paths.push_back(getTextPos(i-1, j+1));
-                paths.push_back(getTextPos(i+1, j-1));
-                paths.push_back(getTextPos(i+1, j));
+                paths.push_back(getTextPos(i, j - 1));
+                paths.push_back(getTextPos(i, j + 1));
+                paths.push_back(getTextPos(i - 1, j));
+                paths.push_back(getTextPos(i - 1, j + 1));
+                paths.push_back(getTextPos(i + 1, j - 1));
+                paths.push_back(getTextPos(i + 1, j));
             }
             connections.insert(pair<string, vector<string>>(getTextPos(i, j), paths));
         }
@@ -335,10 +343,10 @@ void Board::buildConnections()
 
 void Board::printConnections()
 {
-    for (auto it=connections.begin();it!=connections.end();it++)
+    for (auto it = connections.begin(); it != connections.end(); it++)
     {
         cout << it->first << ": ";
-        for (auto it2=it->second.begin();it2!=it->second.end();it2++)
+        for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++)
             cout << *it2 << "\t";
         cout << endl;
     }
@@ -347,11 +355,11 @@ void Board::printConnections()
 Choice Board::whoWon()
 {
     //check blue path (Top-Bottom)
-        //see if there's a connection between the first line and the last
+    //see if there's a connection between the first line and the last
     if (redWon())
         return Choice::kRED;
     //check red path (Left-Right)
-        //see if there's a connection between the first column and the last
+    //see if there's a connection between the first column and the last
     if (blueWon())
         return Choice::kBLUE;
     return Choice::kNONE;
@@ -391,17 +399,17 @@ bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked)
     //cout << alreadyChecked.size() << endl;
     if (!isPresentInVector(alreadyChecked, pos))
         alreadyChecked.push_back(pos);
-    if (moves.find(pos)->second!=c)
+    if (moves.find(pos)->second != c)
         return false;
     if (isFinalPosition(pos, c))
         return true;
     vector<string> possiblePaths = connections.find(pos)->second;
     bool result;
-    for (auto it = possiblePaths.begin();it!=possiblePaths.end();it++)
+    for (auto it = possiblePaths.begin(); it != possiblePaths.end(); it++)
     {
-        while (it!=possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
+        while (it != possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
             it++;
-        if (it==possiblePaths.end())
+        if (it == possiblePaths.end())
             break;
         //cout << "check result " << *it << endl;
         result = findWinPath(*it, c, alreadyChecked);
@@ -416,16 +424,18 @@ bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked)
 bool Board::isFinalPosition(string pos, Choice c)
 {
     //cout << "is final position" << endl;
-    if (c==Choice::kRED) {
+    if (c == Choice::kRED)
+    {
         int i = stoi(pos.substr(0, pos.find(",")));
-        if (i==size-1)
+        if (i == size - 1)
             return true;
         else
             return false;
     }
-    else {
-        int j = stoi(pos.substr(pos.find(",")+1, string::npos));
-        if (j==size-1)
+    else
+    {
+        int j = stoi(pos.substr(pos.find(",") + 1, string::npos));
+        if (j == size - 1)
             return true;
         else
             return false;
@@ -437,8 +447,31 @@ bool isPresentInVector(vector<string> values, string value)
     //cout << "is present in vector " << value << endl;
     for (auto it = values.begin(); it != values.end(); it++)
     {
-        if (*it==value)
+        if (*it == value)
             return true;
     }
     return false;
+}
+
+void executeTrial(Board tempBoard, vector<string> freeMoves, Choice turn, Choice nextTurn, int numTrials, int &numWins)
+{
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count() + numTrials;
+
+    shuffle(freeMoves.begin(), freeMoves.end(), default_random_engine(seed));
+
+    int movesLeft = freeMoves.size();
+    for (int i = 0; i < movesLeft; i++)
+    {
+        if (i < movesLeft / 2)
+            tempBoard.insertMove(freeMoves[i], nextTurn);
+        else
+            tempBoard.insertMove(freeMoves[i], nextTurn == Choice::kRED ? Choice::kBLUE : Choice::kRED);
+    }
+
+    if (tempBoard.whoWon() == turn)
+    {
+        mtx.lock();
+        numWins++;
+        mtx.unlock();
+    }
 }
