@@ -8,7 +8,7 @@
 #include <mutex>
 
 mutex mtx;
-const int kTrials = 300;
+const int kTrials = 10000;
 
 void getSimulatedWins(Board, string, Choice, int &, string &);
 bool isPresentInVector(vector<string>, string);
@@ -356,55 +356,68 @@ Choice Board::whoWon()
 {
     //check blue path (Top-Bottom)
     //see if there's a connection between the first line and the last
-    if (redWon())
+    vector<thread> threads;
+    bool redHasWon;
+    bool blueHasWon;
+    threads.push_back(thread(&Board::redWon, &*this, ref(redHasWon)));
+    threads.push_back(thread(&Board::blueWon, &*this, ref(blueHasWon)));
+    for (auto &t : threads)
+        t.join();
+    if (redHasWon)
         return Choice::kRED;
     //check red path (Left-Right)
     //see if there's a connection between the first column and the last
-    if (blueWon())
+    if (blueHasWon)
         return Choice::kBLUE;
     return Choice::kNONE;
 }
 
-bool Board::redWon()
+void Board::redWon(bool &result)
 {
-    bool result;
+    vector<thread> threads;
     for (int j = 0; j < size; j++)
     {
         vector<string> dummyVector;
-        result = findWinPath(getTextPos(0, j), Choice::kRED, dummyVector);
-        if (result)
-            break;
+        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, dummyVector, ref(result)));
     }
-    //cout << "final red" << endl;
-    return result;
+    for (auto &t : threads)
+    {
+        t.join();
+    }
 }
 
-bool Board::blueWon()
+void Board::blueWon(bool &result)
 {
-    bool result;
+    vector<thread> threads;
     for (int i = 0; i < size; i++)
     {
         vector<string> dummyVector;
-        result = findWinPath(getTextPos(i, 0), Choice::kBLUE, dummyVector);
-        if (result)
-            break;
+        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, dummyVector, ref(result)));
     }
-    //cout << "final blue" << endl;
-    return result;
+    for (auto &t : threads)
+    {
+        t.join();
+    }
 }
 
-bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked)
+bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked, bool &finalResult)
 {
-    //cout << "find win path " << pos << endl;
-    //cout << alreadyChecked.size() << endl;
+    if (finalResult)
+        return true;
     if (!isPresentInVector(alreadyChecked, pos))
         alreadyChecked.push_back(pos);
     if (moves.find(pos)->second != c)
         return false;
     if (isFinalPosition(pos, c))
+    {
+        mtx.lock();
+        finalResult = true;
+        mtx.unlock();
         return true;
+    }
     vector<string> possiblePaths = connections.find(pos)->second;
     bool result;
+    vector<thread> threads;
     for (auto it = possiblePaths.begin(); it != possiblePaths.end(); it++)
     {
         while (it != possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
@@ -412,12 +425,10 @@ bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked)
         if (it == possiblePaths.end())
             break;
         //cout << "check result " << *it << endl;
-        result = findWinPath(*it, c, alreadyChecked);
-        //cout << "result " << result << endl;
-        if (result)
-            break;
+        threads.push_back(thread(&Board::findWinPath, &*this, *it, c, alreadyChecked, ref(result)));
     }
-    //cout << "final result" << endl;
+    for (auto &t : threads)
+        t.join();
     return result;
 }
 

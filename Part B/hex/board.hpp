@@ -4,8 +4,11 @@
 using namespace std;
 #ifndef BOARD_HPP
 #define BOARD_HPP
-enum class Choice {
-    kNONE=0, kRED=1, kBLUE=2
+enum class Choice
+{
+    kNONE = 0,
+    kRED = 1,
+    kBLUE = 2
 };
 
 class Board
@@ -25,12 +28,14 @@ private:
     void printMoves();
     void buildConnections();
     void printConnections();
-    bool blueWon();
-    bool redWon();
-    bool findWinPath(string, Choice, vector<string>);
+    void blueWon(bool &);
+    void redWon(bool &);
+    bool findWinPath(string, Choice, vector<string>, bool &);
     bool isFinalPosition(string, Choice);
+
 public:
-    Board(int size=11) :size(size) {
+    Board(int size = 11) : size(size)
+    {
         buildConnections();
     }
     void setup();
@@ -38,7 +43,8 @@ public:
     void print();
     void makeMove(string);
     void insertMove(string, Choice);
-    int getSize() {
+    int getSize()
+    {
         return size;
     }
     static string getTextPos(int, int);
