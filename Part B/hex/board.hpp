@@ -38,6 +38,7 @@ public:
     {
         buildConnections();
     }
+    ~Board();
     void setup();
     void play();
     void print();

@@ -10,8 +10,8 @@
 mutex mtx;
 const int kTrials = 10000;
 
-void getSimulatedWins(Board, string, Choice, int &, string &);
-bool isPresentInVector(vector<string>, string);
+void getSimulatedWins(Board, const string &, Choice, int &, string &);
+bool isPresentInVector(const vector<string> &, const string &);
 void executeTrial(Board, vector<string>, Choice, Choice, int, int &);
 
 void Board::print()
@@ -185,7 +185,7 @@ void Board::makeComputerMove()
     cout << "computer move took:" << tick.count() << endl;
 }
 
-void getSimulatedWins(Board b, string firstMove, Choice turn, int &bestWin, string &bestMove)
+void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWin, string &bestMove)
 {
     chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
     int numTrials = 0;
@@ -453,7 +453,7 @@ bool Board::isFinalPosition(string pos, Choice c)
     }
 }
 
-bool isPresentInVector(vector<string> values, string value)
+bool isPresentInVector(const vector<string> &values, const string &value)
 {
     //cout << "is present in vector " << value << endl;
     for (auto it = values.begin(); it != values.end(); it++)
@@ -485,4 +485,10 @@ void executeTrial(Board tempBoard, vector<string> freeMoves, Choice turn, Choice
         numWins++;
         mtx.unlock();
     }
+}
+
+Board::~Board()
+{
+    moves.clear();
+    connections.clear();
 }
