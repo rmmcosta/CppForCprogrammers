@@ -62,3 +62,59 @@ Hex rules:
     - if the 1st player plays perfectly he will always win
     - so, if the 2nd player steals the 1st player first move he will have the guarantee to 
     win if he plays perfectly
+
+assertions and exceptions:
+    proofs of correctness
+        test preconditions
+        code to be certified
+        test postconditions
+        -if pre and post conditions are true than the code is correct
+
+asserts are runtime test
+    - is those tests fail the program will abort
+        - some overhead is added to our programs with this
+        - #include <cassert>
+            void assert(int expression);
+            -> this is essentially a macro
+            and can be disabled with #define NDEBUG
+    - in c++11 Static_asserts were added which allows the compiler
+    to statically test conditions (compile time asserts)
+        - a proof checker embeded in the compiler 
+        - no overhead
+    
+use exceptions wisely 
+    - don't use it for things that are considered normal flows
+    - don't use them to control flows
+    - use it to recover from errors
+        use ellipsis to catch everything
+        try
+        {
+
+        }
+        catch(...)
+        {
+
+        }
+    - standard exceptions present in the stl
+
+Static assert:
+    - static_assert(bool_constexpr, string);
+
+move semantics:
+    - lvalues and rvalues;
+        - most of the times in an assignment on the left we have the lvalue
+        and on the right the rvalue;
+        - you can have lvalue references from lvalues but not lvalue references from rvalues
+        - string1 = "xpot", string2 = "yzp"
+        - string3 = string1 + string2;
+        string1+string2 is an rvalue because it is a temporary string which we can't assign to it
+        - lvalue reference doesn't accept constants (rvalues)
+        for instance
+        void print(string& s)
+        {}
+        print(string1+string2); -> will throw an error
+        but if we change to void print(const string& s){}
+            - this will work for both lvalues and rvalues
+        if we change to void print(string&& s){}
+            - this will work with rvalues
+
