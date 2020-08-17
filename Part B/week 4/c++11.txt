@@ -1,0 +1,8 @@
+c++11 standard:
+    - tuple
+    - array
+    - forward_list
+    - unordered_map, unordered_set
+    - thread
+    - regex
+    - type_traits

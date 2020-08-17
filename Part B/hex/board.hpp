@@ -30,7 +30,7 @@ private:
     void printConnections();
     void blueWon(bool &);
     void redWon(bool &);
-    bool findWinPath(string, Choice, vector<string>, bool &);
+    bool findWinPath(string, Choice, vector<string> &, bool &);
     bool isFinalPosition(string, Choice);
 
 public:

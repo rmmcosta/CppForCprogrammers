@@ -170,10 +170,11 @@ void Board::makeComputerMove()
     string bestMove;
     int bestWin = 0;
     int evaluatedMoves = 0;
-    vector<thread> threads;
+    vector<thread> threads(freeMoves.size());
+
     while (evaluatedMoves < freeMoves.size())
     {
-        threads.push_back(thread(getSimulatedWins, *this, freeMoves[evaluatedMoves], this->turn, ref(bestWin), ref(bestMove)));
+        threads[evaluatedMoves] = thread(getSimulatedWins, *this, freeMoves[evaluatedMoves], this->turn, ref(bestWin), ref(bestMove));
         evaluatedMoves++;
     }
     for (auto &t : threads)
@@ -378,7 +379,7 @@ void Board::redWon(bool &result)
     for (int j = 0; j < size; j++)
     {
         vector<string> dummyVector;
-        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, dummyVector, ref(result)));
+        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, ref(dummyVector), ref(result)));
     }
     for (auto &t : threads)
     {
@@ -392,7 +393,7 @@ void Board::blueWon(bool &result)
     for (int i = 0; i < size; i++)
     {
         vector<string> dummyVector;
-        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, dummyVector, ref(result)));
+        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, ref(dummyVector), ref(result)));
     }
     for (auto &t : threads)
     {
@@ -400,7 +401,7 @@ void Board::blueWon(bool &result)
     }
 }
 
-bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked, bool &finalResult)
+bool Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked, bool &finalResult)
 {
     if (finalResult)
         return true;
@@ -425,7 +426,7 @@ bool Board::findWinPath(string pos, Choice c, vector<string> alreadyChecked, boo
         if (it == possiblePaths.end())
             break;
         //cout << "check result " << *it << endl;
-        threads.push_back(thread(&Board::findWinPath, &*this, *it, c, alreadyChecked, ref(result)));
+        threads.push_back(thread(&Board::findWinPath, &*this, *it, c, ref(alreadyChecked), ref(result)));
     }
     for (auto &t : threads)
         t.join();
