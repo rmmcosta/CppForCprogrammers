@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.hpp
+unordered_map
+-
+string
+-
+vector
+-
+iostream
+-
+algorithm
+-
+random
+-
+chrono
+-
+thread
+-
+future
+-
+mutex
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/boardTest.cpp
+board.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.hpp
+gtest/gtest.h
+-
+

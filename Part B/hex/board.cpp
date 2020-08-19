@@ -1,18 +1,6 @@
 #include "board.hpp"
-#include <iostream>
-#include <algorithm>
-#include <random>
-#include <chrono>
-#include <thread>
-#include <future>
-#include <mutex>
 
 mutex mtx;
-const int kTrials = 10000;
-
-void getSimulatedWins(Board, const string &, Choice, int &, string &);
-bool isPresentInVector(const vector<string> &, const string &);
-void executeTrial(Board, vector<string>, Choice, Choice, int, int &);
 
 void Board::print()
 {
@@ -170,16 +158,16 @@ void Board::makeComputerMove()
     string bestMove;
     int bestWin = 0;
     int evaluatedMoves = 0;
-    vector<thread> threads(freeMoves.size());
+    vector<thread *> threads(freeMoves.size());
 
     while (evaluatedMoves < freeMoves.size())
     {
-        threads[evaluatedMoves] = thread(getSimulatedWins, *this, freeMoves[evaluatedMoves], this->turn, ref(bestWin), ref(bestMove));
+        threads[evaluatedMoves] = new thread(getSimulatedWins, *this, freeMoves[evaluatedMoves], this->turn, ref(bestWin), ref(bestMove));
         evaluatedMoves++;
     }
     for (auto &t : threads)
     {
-        t.join();
+        t->join();
     }
     this->makeMove(bestMove);
     chrono::duration<double> tick = chrono::system_clock::now() - tinit;
@@ -204,29 +192,29 @@ void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWi
             }
         }
     }
-    array<thread, kTrials> threads;
+    vector<thread *> threads(kTrials);
     int numWins = 0;
     for (auto &t : threads)
     {
-        t = thread(executeTrial, b, freeMoves, turn, nextTurn, numTrials, ref(numWins));
+        t = new thread(executeTrial, b, freeMoves, turn, nextTurn, numTrials, ref(numWins));
         numTrials++;
     }
 
     for (auto &t : threads)
     {
-        t.join();
+        t->join();
     }
     //cout << "finished trials" << endl;
     //cout << "num wins" << numWins << endl;
     auto tick = chrono::system_clock::now() - tinit;
     cout << "simulated wins took:" << tick.count() << endl;
-    mtx.lock();
+    //mtx.lock();
     if (numWins > bestWin)
     {
         bestWin = numWins;
         bestMove = firstMove;
     }
-    mtx.unlock();
+    //mtx.unlock();
 }
 
 ostream &operator<<(ostream &out, Choice &c)
@@ -357,13 +345,15 @@ Choice Board::whoWon()
 {
     //check blue path (Top-Bottom)
     //see if there's a connection between the first line and the last
-    vector<thread> threads;
+    //vector<thread *> threads(2);
     bool redHasWon;
     bool blueHasWon;
-    threads.push_back(thread(&Board::redWon, &*this, ref(redHasWon)));
-    threads.push_back(thread(&Board::blueWon, &*this, ref(blueHasWon)));
+    /*threads[0] = new thread(&Board::redWon, &*this, ref(redHasWon));
+    threads[1] = new thread(&Board::blueWon, &*this, ref(blueHasWon));
     for (auto &t : threads)
-        t.join();
+        t->join();*/
+    redWon(redHasWon);
+    blueWon(blueHasWon);
     if (redHasWon)
         return Choice::kRED;
     //check red path (Left-Right)
@@ -375,62 +365,59 @@ Choice Board::whoWon()
 
 void Board::redWon(bool &result)
 {
-    vector<thread> threads;
+    //vector<thread *> threads;
     for (int j = 0; j < size; j++)
     {
         vector<string> dummyVector;
-        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, ref(dummyVector), ref(result)));
+        findWinPath(getTextPos(0, j), Choice::kRED, dummyVector, result);
+        //threads.push_back(new thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, ref(dummyVector), ref(result)));
     }
-    for (auto &t : threads)
-    {
-        t.join();
-    }
+    /*for (auto &t : threads)
+        t->join();*/
 }
 
 void Board::blueWon(bool &result)
 {
-    vector<thread> threads;
+    //vector<thread *> threads;
     for (int i = 0; i < size; i++)
     {
         vector<string> dummyVector;
-        threads.push_back(thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, ref(dummyVector), ref(result)));
+        findWinPath(getTextPos(i, 0), Choice::kBLUE, dummyVector, result);
+        //threads.push_back(new thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, ref(dummyVector), ref(result)));
     }
-    for (auto &t : threads)
-    {
-        t.join();
-    }
+    /*for (auto &t : threads)
+        t->join();*/
 }
 
-bool Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked, bool &finalResult)
+void Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked, bool &finalResult)
 {
     if (finalResult)
-        return true;
+        return;
     if (!isPresentInVector(alreadyChecked, pos))
         alreadyChecked.push_back(pos);
     if (moves.find(pos)->second != c)
-        return false;
+        return;
     if (isFinalPosition(pos, c))
     {
-        mtx.lock();
+        //mtx.lock();
         finalResult = true;
-        mtx.unlock();
-        return true;
+        //mtx.unlock();
+        return;
     }
     vector<string> possiblePaths = connections.find(pos)->second;
-    bool result;
-    vector<thread> threads;
+    //vector<thread *> threads;
     for (auto it = possiblePaths.begin(); it != possiblePaths.end(); it++)
     {
         while (it != possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
             it++;
         if (it == possiblePaths.end())
             break;
+        findWinPath(*it, c, alreadyChecked, finalResult);
         //cout << "check result " << *it << endl;
-        threads.push_back(thread(&Board::findWinPath, &*this, *it, c, ref(alreadyChecked), ref(result)));
+        //threads.push_back(new thread(&Board::findWinPath, &*this, *it, c, ref(alreadyChecked), ref(finalResult)));
     }
-    for (auto &t : threads)
-        t.join();
-    return result;
+    /*for (auto &t : threads)
+        t->join();*/
 }
 
 bool Board::isFinalPosition(string pos, Choice c)
@@ -482,9 +469,9 @@ void executeTrial(Board tempBoard, vector<string> freeMoves, Choice turn, Choice
 
     if (tempBoard.whoWon() == turn)
     {
-        mtx.lock();
+        //mtx.lock();
         numWins++;
-        mtx.unlock();
+        //mtx.unlock();
     }
 }
 
