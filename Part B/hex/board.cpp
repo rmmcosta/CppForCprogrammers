@@ -143,18 +143,7 @@ void Board::play()
 void Board::makeComputerMove()
 {
     chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
-    vector<string> freeMoves;
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            string textPos = getTextPos(i, j);
-            if (posFree(textPos))
-            {
-                freeMoves.push_back(textPos);
-            }
-        }
-    }
+    vector<string> freeMoves = getFreeMoves();
     string bestMove;
     int bestWin = 0;
     int evaluatedMoves = 0;
@@ -180,18 +169,7 @@ void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWi
     int numTrials = 0;
     b.insertMove(firstMove, turn);
     Choice nextTurn = turn == Choice::kRED ? Choice::kBLUE : Choice::kRED;
-    vector<string> freeMoves;
-    for (int i = 0; i < b.getSize(); i++)
-    {
-        for (int j = 0; j < b.getSize(); j++)
-        {
-            string textPos = Board::getTextPos(i, j);
-            if (b.posFree(textPos))
-            {
-                freeMoves.push_back(textPos);
-            }
-        }
-    }
+    vector<string> freeMoves = b.getFreeMoves();
     vector<thread *> threads(kTrials);
     int numWins = 0;
     for (auto &t : threads)
@@ -204,17 +182,30 @@ void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWi
     {
         t->join();
     }
-    //cout << "finished trials" << endl;
-    //cout << "num wins" << numWins << endl;
     auto tick = chrono::system_clock::now() - tinit;
     cout << "simulated wins took:" << tick.count() << endl;
-    //mtx.lock();
     if (numWins > bestWin)
     {
         bestWin = numWins;
         bestMove = firstMove;
     }
-    //mtx.unlock();
+}
+
+vector<string> Board::getFreeMoves()
+{
+    vector<string> freeMoves;
+    for (int i = 0; i < getSize(); i++)
+    {
+        for (int j = 0; j < getSize(); j++)
+        {
+            string textPos = Board::getTextPos(i, j);
+            if (posFree(textPos))
+            {
+                freeMoves.push_back(textPos);
+            }
+        }
+    }
+    return freeMoves;
 }
 
 ostream &operator<<(ostream &out, Choice &c)
@@ -343,86 +334,61 @@ void Board::printConnections()
 
 Choice Board::whoWon()
 {
-    //check blue path (Top-Bottom)
-    //see if there's a connection between the first line and the last
-    //vector<thread *> threads(2);
-    bool redHasWon;
-    bool blueHasWon;
-    /*threads[0] = new thread(&Board::redWon, &*this, ref(redHasWon));
-    threads[1] = new thread(&Board::blueWon, &*this, ref(blueHasWon));
-    for (auto &t : threads)
-        t->join();*/
-    redWon(redHasWon);
-    blueWon(blueHasWon);
-    if (redHasWon)
+    if (redWon())
         return Choice::kRED;
-    //check red path (Left-Right)
-    //see if there's a connection between the first column and the last
-    if (blueHasWon)
+    if (blueWon())
         return Choice::kBLUE;
     return Choice::kNONE;
 }
 
-void Board::redWon(bool &result)
+bool Board::redWon()
 {
-    //vector<thread *> threads;
     for (int j = 0; j < size; j++)
     {
         vector<string> dummyVector;
-        findWinPath(getTextPos(0, j), Choice::kRED, dummyVector, result);
-        //threads.push_back(new thread(&Board::findWinPath, &*this, getTextPos(0, j), Choice::kRED, ref(dummyVector), ref(result)));
+        if (findWinPath(getTextPos(0, j), Choice::kRED, dummyVector))
+            return true;
     }
-    /*for (auto &t : threads)
-        t->join();*/
+    return false;
 }
 
-void Board::blueWon(bool &result)
+bool Board::blueWon()
 {
-    //vector<thread *> threads;
     for (int i = 0; i < size; i++)
     {
         vector<string> dummyVector;
-        findWinPath(getTextPos(i, 0), Choice::kBLUE, dummyVector, result);
-        //threads.push_back(new thread(&Board::findWinPath, &*this, getTextPos(i, 0), Choice::kBLUE, ref(dummyVector), ref(result)));
+        if (findWinPath(getTextPos(i, 0), Choice::kBLUE, dummyVector))
+            return true;
     }
-    /*for (auto &t : threads)
-        t->join();*/
+    return false;
 }
 
-void Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked, bool &finalResult)
+bool Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked)
 {
-    if (finalResult)
-        return;
+    if (moves.find(pos) == moves.end())
+        return false;
     if (!isPresentInVector(alreadyChecked, pos))
         alreadyChecked.push_back(pos);
     if (moves.find(pos)->second != c)
-        return;
+        return false;
     if (isFinalPosition(pos, c))
     {
-        //mtx.lock();
-        finalResult = true;
-        //mtx.unlock();
-        return;
+        return true;
     }
     vector<string> possiblePaths = connections.find(pos)->second;
-    //vector<thread *> threads;
     for (auto it = possiblePaths.begin(); it != possiblePaths.end(); it++)
     {
         while (it != possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
             it++;
         if (it == possiblePaths.end())
             break;
-        findWinPath(*it, c, alreadyChecked, finalResult);
-        //cout << "check result " << *it << endl;
-        //threads.push_back(new thread(&Board::findWinPath, &*this, *it, c, ref(alreadyChecked), ref(finalResult)));
+        return findWinPath(*it, c, alreadyChecked);
     }
-    /*for (auto &t : threads)
-        t->join();*/
+    return false;
 }
 
 bool Board::isFinalPosition(string pos, Choice c)
 {
-    //cout << "is final position" << endl;
     if (c == Choice::kRED)
     {
         int i = stoi(pos.substr(0, pos.find(",")));
@@ -443,7 +409,6 @@ bool Board::isFinalPosition(string pos, Choice c)
 
 bool isPresentInVector(const vector<string> &values, const string &value)
 {
-    //cout << "is present in vector " << value << endl;
     for (auto it = values.begin(); it != values.end(); it++)
     {
         if (*it == value)
@@ -453,6 +418,13 @@ bool isPresentInVector(const vector<string> &values, const string &value)
 }
 
 void executeTrial(Board tempBoard, vector<string> freeMoves, Choice turn, Choice nextTurn, int numTrials, int &numWins)
+{
+    insertRandomMoves(tempBoard, freeMoves, turn, nextTurn, numTrials);
+    if (tempBoard.whoWon() == turn)
+        numWins++;
+}
+
+void insertRandomMoves(Board &tempBoard, vector<string> freeMoves, Choice turn, Choice nextTurn, int numTrials)
 {
     unsigned seed = chrono::system_clock::now().time_since_epoch().count() + numTrials;
 
@@ -465,13 +437,6 @@ void executeTrial(Board tempBoard, vector<string> freeMoves, Choice turn, Choice
             tempBoard.insertMove(freeMoves[i], nextTurn);
         else
             tempBoard.insertMove(freeMoves[i], nextTurn == Choice::kRED ? Choice::kBLUE : Choice::kRED);
-    }
-
-    if (tempBoard.whoWon() == turn)
-    {
-        //mtx.lock();
-        numWins++;
-        //mtx.unlock();
     }
 }
 

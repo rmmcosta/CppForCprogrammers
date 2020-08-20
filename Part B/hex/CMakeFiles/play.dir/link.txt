@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/play.dir/board.cpp.o CMakeFiles/play.dir/play.cpp.o  -o play  -lpthread 

@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.cpp
+board.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.hpp
+
 /home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.hpp
 unordered_map
 -

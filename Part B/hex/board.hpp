@@ -11,7 +11,7 @@
 #include <future>
 #include <mutex>
 
-const int kTrials = 10000;
+const int kTrials = 1000;
 
 using namespace std;
 
@@ -35,12 +35,10 @@ private:
     Choice turn;
     bool finish();
     Choice computer;
-    void makeComputerMove();
-    void printMoves();
     void buildConnections();
     void printConnections();
-    void blueWon(bool &);
-    void redWon(bool &);
+    bool blueWon();
+    bool redWon();
     bool isFinalPosition(string, Choice);
 
 public:
@@ -66,11 +64,16 @@ public:
     static string getTextPos(int, int);
     bool posFree(string pos);
     Choice whoWon();
-    void findWinPath(string, Choice, vector<string> &, bool &);
+    bool findWinPath(string, Choice, vector<string> &);
+    void printMoves();
+    int getNumPlayedMoves() { return moves.size(); }
+    vector<string> getFreeMoves();
+    void makeComputerMove();
 };
 
 void getSimulatedWins(Board, const string &, Choice, int &, string &);
 bool isPresentInVector(const vector<string> &, const string &);
 void executeTrial(Board, vector<string>, Choice, Choice, int, int &);
+void insertRandomMoves(Board &, vector<string>, Choice, Choice, int);
 
 #endif

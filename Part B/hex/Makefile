@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named play
+
+# Build rule for target.
+play: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 play
+.PHONY : play
+
+# fast build rule for target.
+play/fast:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/build
+.PHONY : play/fast
+
+#=============================================================================
 # Target rules for targets named runTests
 
 # Build rule for target.
@@ -129,6 +142,7 @@ board.o: board.cpp.o
 
 # target to build an object file
 board.cpp.o:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/board.cpp.o
 	$(MAKE) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/board.cpp.o
 .PHONY : board.cpp.o
 
@@ -138,6 +152,7 @@ board.i: board.cpp.i
 
 # target to preprocess a source file
 board.cpp.i:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/board.cpp.i
 	$(MAKE) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/board.cpp.i
 .PHONY : board.cpp.i
 
@@ -147,6 +162,7 @@ board.s: board.cpp.s
 
 # target to generate assembly for a file
 board.cpp.s:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/board.cpp.s
 	$(MAKE) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/board.cpp.s
 .PHONY : board.cpp.s
 
@@ -177,6 +193,33 @@ boardTest.cpp.s:
 	$(MAKE) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/boardTest.cpp.s
 .PHONY : boardTest.cpp.s
 
+play.o: play.cpp.o
+
+.PHONY : play.o
+
+# target to build an object file
+play.cpp.o:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/play.cpp.o
+.PHONY : play.cpp.o
+
+play.i: play.cpp.i
+
+.PHONY : play.i
+
+# target to preprocess a source file
+play.cpp.i:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/play.cpp.i
+.PHONY : play.cpp.i
+
+play.s: play.cpp.s
+
+.PHONY : play.s
+
+# target to generate assembly for a file
+play.cpp.s:
+	$(MAKE) -f CMakeFiles/play.dir/build.make CMakeFiles/play.dir/play.cpp.s
+.PHONY : play.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -185,6 +228,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... play"
 	@echo "... runTests"
 	@echo "... board.o"
 	@echo "... board.i"
@@ -192,6 +236,9 @@ help:
 	@echo "... boardTest.o"
 	@echo "... boardTest.i"
 	@echo "... boardTest.s"
+	@echo "... play.o"
+	@echo "... play.i"
+	@echo "... play.s"
 .PHONY : help
 
 
