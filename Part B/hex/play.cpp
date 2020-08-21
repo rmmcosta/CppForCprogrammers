@@ -2,7 +2,7 @@
 
 int main()
 {
-    Board b(3);
+    Board b(11);
     b.print();
     b.setup();
     b.play();

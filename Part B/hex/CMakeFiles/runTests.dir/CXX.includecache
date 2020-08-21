@@ -32,9 +32,3 @@ future
 mutex
 -
 
-/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/boardTest.cpp
-board.hpp
-/home/rmmcosta/Documents/CppForCprogrammers/Part B/hex/board.hpp
-gtest/gtest.h
--
-

@@ -143,6 +143,13 @@ void Board::play()
 void Board::makeComputerMove()
 {
     chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
+    if (getNumPlayedMoves() == 0)
+    {
+        this->makeMove(getTextPos(size / 2, size / 2));
+        chrono::duration<double> tick = chrono::system_clock::now() - tinit;
+        cout << "computer move took:" << tick.count() << endl;
+        return;
+    }
     vector<string> freeMoves = getFreeMoves();
     string bestMove;
     int bestWin = 0;
@@ -165,12 +172,13 @@ void Board::makeComputerMove()
 
 void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWin, string &bestMove)
 {
-    chrono::time_point<std::chrono::system_clock> tinit = chrono::system_clock::now();
     int numTrials = 0;
     b.insertMove(firstMove, turn);
     Choice nextTurn = turn == Choice::kRED ? Choice::kBLUE : Choice::kRED;
     vector<string> freeMoves = b.getFreeMoves();
-    vector<thread *> threads(kTrials);
+    int trials2Simulate = kTrials / b.getSize() + b.getNumPlayedMoves() * kTrials / b.getSize() / 10;
+    trials2Simulate = min(b.getSize() * b.getSize() * 100, trials2Simulate);
+    vector<thread *> threads(trials2Simulate);
     int numWins = 0;
     for (auto &t : threads)
     {
@@ -182,8 +190,6 @@ void getSimulatedWins(Board b, const string &firstMove, Choice turn, int &bestWi
     {
         t->join();
     }
-    auto tick = chrono::system_clock::now() - tinit;
-    cout << "simulated wins took:" << tick.count() << endl;
     if (numWins > bestWin)
     {
         bestWin = numWins;
@@ -376,15 +382,18 @@ bool Board::findWinPath(string pos, Choice c, vector<string> &alreadyChecked)
         return true;
     }
     vector<string> possiblePaths = connections.find(pos)->second;
+    bool result;
     for (auto it = possiblePaths.begin(); it != possiblePaths.end(); it++)
     {
         while (it != possiblePaths.end() && isPresentInVector(alreadyChecked, *it))
             it++;
         if (it == possiblePaths.end())
             break;
-        return findWinPath(*it, c, alreadyChecked);
+        result = findWinPath(*it, c, alreadyChecked);
+        if (result)
+            break;
     }
-    return false;
+    return result;
 }
 
 bool Board::isFinalPosition(string pos, Choice c)

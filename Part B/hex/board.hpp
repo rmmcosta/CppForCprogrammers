@@ -11,7 +11,7 @@
 #include <future>
 #include <mutex>
 
-const int kTrials = 1000;
+const int kTrials = 2000;
 
 using namespace std;
 

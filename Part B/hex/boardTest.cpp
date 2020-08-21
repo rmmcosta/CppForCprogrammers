@@ -31,7 +31,7 @@ TEST(BoardTest, SimulateWins)
     try
     {
         getSimulatedWins(*b, firstMove, Choice::kBLUE, wins, bestMove);
-        ASSERT_EQ(wins, kTrials);
+        ASSERT_GT(wins, 0);
         ASSERT_EQ(firstMove, bestMove);
     }
     catch (...)
@@ -107,7 +107,7 @@ TEST(BoardTest, WhoWon)
         Board *b1 = new Board(3);
         ASSERT_EQ(Choice::kNONE, b1->whoWon());
         b1->insertMove("0,0", Choice::kBLUE);
-        ASSERT_EQ(Choice::kNONE, b->whoWon());
+        ASSERT_EQ(Choice::kNONE, b1->whoWon());
     }
     catch (...)
     {
