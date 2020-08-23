@@ -6,3 +6,19 @@ c++11 standard:
     - thread
     - regex
     - type_traits
+
+with unordered_map, since it's an hashed based map, there are no collisions
+and it takes constant time to retrieve a pair.
+
+regex:
+    std::regex txt_regex("[a-z]+\\.txt");
+    //find a txt file with at least one letter in the name and only letters
+    std::regex_match(string,txt_regex);
+
+thread:
+    <thread>
+    <mutex>
+    <future>
+    <atomic>
+    <condition_variable>
+    join is used to synchronize the threads
