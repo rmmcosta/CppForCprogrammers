@@ -22,3 +22,10 @@ thread:
     <atomic>
     <condition_variable>
     join is used to synchronize the threads
+
+- tuple
+    - a tuple is a generalization of pair
+    - links together small number of values
+
+- move semantics
+    - std::move() is part of the iostream library 
