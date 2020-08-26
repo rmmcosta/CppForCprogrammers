@@ -1,0 +1,30 @@
+- Four essential elements of a pattern:
+    - pattern name
+    - problem
+    - solution
+    - consequences
+
+- creational patterns:
+    - factory method
+        - virtual construction
+        - defer construction to sub classes
+    - singleton
+        - assure only one instance
+- structural patterns:
+    - facade
+        - provide unified interface
+    - proxy
+        - provide surrogate
+
+- factory method:
+    - aka: virtual constructor
+    - related to abstract factory and prototype patterns
+    - code knows about abstract base class (or interface)
+    but not concrete subclass
+    - creation is deferred to runtime
+    - subclasses create objects
+    - we have the abstract creator and the concrete creator
+        - the concrete creator overrides factory method to build concrete objects
+    - supports abstract object interface
+    - the abstract creator class has a virtual create method
+    - use tags (enumerators) to determine which type is to be created
