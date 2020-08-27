@@ -28,3 +28,9 @@
     - supports abstract object interface
     - the abstract creator class has a virtual create method
     - use tags (enumerators) to determine which type is to be created
+
+- adapter pattern:
+    - convert interface of class to one expected
+    - aka: wrapper
+    - client calls the adapter to perform operations
+    - adapter calls the adaptee to carry out those operations

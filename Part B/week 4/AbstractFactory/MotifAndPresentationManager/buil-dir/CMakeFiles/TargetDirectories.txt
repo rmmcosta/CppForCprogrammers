@@ -1,0 +1,3 @@
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/buil-dir/CMakeFiles/rebuild_cache.dir
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/buil-dir/CMakeFiles/edit_cache.dir
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/buil-dir/CMakeFiles/client.dir

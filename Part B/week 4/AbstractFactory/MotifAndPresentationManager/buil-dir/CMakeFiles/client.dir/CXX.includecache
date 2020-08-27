@@ -1,0 +1,114 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/client.cpp
+makeFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/makeFactory.hpp
+pmWidgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWidgetFactory.hpp
+motifWidgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWidgetFactory.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/makeFactory.cpp
+makeFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/makeFactory.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/makeFactory.hpp
+widgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/widgetFactory.hpp
+scrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/scrollBar.hpp
+window.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/window.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifScrollBar.cpp
+motifScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifScrollBar.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifScrollBar.hpp
+scrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/scrollBar.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWidgetFactory.cpp
+motifWidgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWidgetFactory.hpp
+motifWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWindow.hpp
+motifScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifScrollBar.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWidgetFactory.hpp
+widgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/widgetFactory.hpp
+motifScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifScrollBar.hpp
+motifWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWindow.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWindow.cpp
+motifWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWindow.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/motifWindow.hpp
+window.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/window.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmScrollBar.cpp
+pmScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmScrollBar.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmScrollBar.hpp
+scrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/scrollBar.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWidgetFactory.cpp
+pmWidgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWidgetFactory.hpp
+pmWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWindow.hpp
+pmScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmScrollBar.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWidgetFactory.hpp
+widgetFactory.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/widgetFactory.hpp
+pmWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWindow.hpp
+pmScrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmScrollBar.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWindow.cpp
+pmWindow.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWindow.hpp
+iostream
+-
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/pmWindow.hpp
+window.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/window.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/scrollBar.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/widgetFactory.hpp
+window.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/window.hpp
+scrollBar.hpp
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/scrollBar.hpp
+
+/home/rmmcosta/Documents/CppForCprogrammers/Part B/week 4/AbstractFactory/MotifAndPresentationManager/window.hpp
+
